@@ -1,7 +1,7 @@
-package frc.robot.Subsystems;
+package frc.robot.Subsystems.Intake;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Subsystems.IntakeIO.IntakeIOInputs;
+import frc.robot.Subsystems.Intake.IntakeIO.IntakeIOInputs;
 
 public class Intake extends SubsystemBase {
     private IntakeIO io;
