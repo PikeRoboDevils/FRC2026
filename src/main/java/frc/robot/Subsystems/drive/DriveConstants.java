@@ -48,21 +48,20 @@ public class DriveConstants {
       };
 
 
-  // TODO: Zeroed rotation values for each module, see setup instructions
-  public static final Rotation2d frontLeftZeroRotation = new Rotation2d(0.0);
-  public static final Rotation2d frontRightZeroRotation = new Rotation2d(0.0);
-  public static final Rotation2d backLeftZeroRotation = new Rotation2d(0.0);
-  public static final Rotation2d backRightZeroRotation = new Rotation2d(0.0);
+  public static final Rotation2d frontLeftZeroRotation = new Rotation2d(5.556);
+  public static final Rotation2d frontRightZeroRotation = new Rotation2d(4.781);
+  public static final Rotation2d backLeftZeroRotation = new Rotation2d(6.256);
+  public static final Rotation2d backRightZeroRotation = new Rotation2d(1.255);
 
   // Device CAN IDs
   public static final int pigeonCanId = 11;
 
-  public static final int frontLeftDriveCanId = 8;
+  public static final int frontLeftDriveCanId = 9;
   public static final int backLeftDriveCanId = 6;
   public static final int frontRightDriveCanId = 3;
   public static final int backRightDriveCanId = 5;
 
-  public static final int frontLeftTurnCanId = 9;
+  public static final int frontLeftTurnCanId = 8;
   public static final int backLeftTurnCanId = 7;
   public static final int frontRightTurnCanId = 2;
   public static final int backRightTurnCanId = 4;
@@ -100,13 +99,13 @@ public class DriveConstants {
   // Turn encoder configuration
   public static final boolean turnEncoderInverted = true;
   public static final double turnEncoderPositionFactor =
-      2 * Math.PI / turnMotorReduction; // Rotations -> WHEEL Radians
+      2 * Math.PI ; // Rotations -> WHEEL Radians
   public static final double turnEncoderVelocityFactor =
-      (2 * Math.PI) / 60.0 / turnMotorReduction; // RPM -> WHEEL Rad/Sec
+      (2 * Math.PI) / 60.0 ; // RPM -> WHEEL Rad/Sec
 
   // Turn PID configuration
-  public static final double turnKp = 0.8;
-  public static final double turnKd = 0;
+  public static final double turnKp = 0.15;
+  public static final double turnKd = 0.01;
   public static final double turnSimP = 0.01;
   public static final double turnSimD = 0.0;
   public static final double turnPIDMinInput = 0; // Radians
