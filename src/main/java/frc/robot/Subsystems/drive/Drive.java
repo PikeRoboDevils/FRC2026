@@ -304,6 +304,10 @@ public class Drive extends SubsystemBase {
     poseEstimator.resetPosition(rawGyroRotation, getModulePositions(), pose);
   }
 
+    /** Resets the current  gyro angle. */
+  public void resetGyro(double angle) {
+    poseEstimator.resetRotation(new Rotation2d(Math.toRadians(angle)));
+  }
   /** Adds a new timestamped vision measurement. */
   public void addVisionMeasurement(
       Pose2d visionRobotPoseMeters,

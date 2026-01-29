@@ -13,11 +13,11 @@
 
 package frc.robot.Subsystems.drive;
 
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Inches;
-import static edu.wpi.first.units.Units.KilogramSquareMeters;
 import static edu.wpi.first.units.Units.Seconds;
-import static edu.wpi.first.units.Units.Volts;
 
+import com.ctre.phoenix6.configs.MountPoseConfigs;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.path.PathConstraints;
@@ -26,12 +26,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Time;
-import edu.wpi.first.units.measure.Voltage;
-// import org.ironmaple.simulation.drivesims.COTS;
-// import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
-// import org.ironmaple.simulation.drivesims.configs.SwerveModuleSimulationConfig;
 
 public class DriveConstants {
   public static final double maxSpeedMetersPerSec = Units.feetToMeters(16);
@@ -104,8 +101,8 @@ public class DriveConstants {
       (2 * Math.PI) / 60.0 ; // RPM -> WHEEL Rad/Sec
 
   // Turn PID configuration
-  public static final double turnKp = 0.15;
-  public static final double turnKd = 0.01;
+  public static final double turnKp = 0.2;
+  public static final double turnKd = 0.0;
   public static final double turnSimP = 0.01;
   public static final double turnSimD = 0.0;
   public static final double turnPIDMinInput = 0; // Radians
@@ -128,6 +125,11 @@ public class DriveConstants {
               driveMotorCurrentLimit,
               1),
           moduleTranslations);
+
+
+          // GRYO ANGLE OFFSET
+// public static final Pose2d gyroOffset = new Pose2d(0,0, new Rotation2d(180));
+public static final MountPoseConfigs gyroOffset = new MountPoseConfigs().withMountPoseYaw(0); //isnt doing anythin???
 
   // Path On The Fly Constraints
   public static PathConstraints kTeleopPathConstraints =

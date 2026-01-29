@@ -4,6 +4,14 @@
 
 package frc.robot;
 
+
+import org.littletonrobotics.junction.Logger;
+
+import com.pathplanner.lib.auto.AutoBuilder;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -17,6 +25,8 @@ public class RobotContainer {
   private CommandXboxController driver = new CommandXboxController(0);
   private CommandXboxController operater = new CommandXboxController(1);
 
+
+  private final SendableChooser<Command> autoChooser;
   private final Drive drive;
 
 
@@ -30,6 +40,9 @@ public class RobotContainer {
                 new ModuleIOSpark(1),
                 new ModuleIOSpark(2),
                 new ModuleIOSpark(3));
+
+    autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Auto Chooser",autoChooser);
     configureBindings();
   }
 
@@ -42,6 +55,8 @@ public class RobotContainer {
             () -> -driver.getLeftX(),
             () -> driver.getRightX()));
 
+            //RESET GYRO
+            driver.b().onTrue(Commands.runOnce(()->drive.resetGyro(180), drive));
 
     driver.x().onTrue(Commands.runEnd(
       ()->intake.run(),
@@ -52,6 +67,7 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return Commands.print("No autonomous command configured");
+    Logger.recordOutput("Auto Chosen", autoChooser.getSelected().getName());
+    return autoChooser.getSelected();
   }
 }
