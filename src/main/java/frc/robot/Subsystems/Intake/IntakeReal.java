@@ -9,23 +9,24 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 public class IntakeReal implements IntakeIO {
 
-private final SparkMax Lead = new SparkMax(1,MotorType.kBrushless);
-private final SparkMax Follow = new SparkMax(2,MotorType.kBrushless);
+private final SparkMax Lead = new SparkMax(11,MotorType.kBrushless);
+// private final SparkMax Follow = new SparkMax(200,MotorType.kBrushless);//doesnt exitst
 private SparkBaseConfig lMotorConfig = new SparkMaxConfig();
-private SparkBaseConfig fMotorConfig;
+// private SparkBaseConfig fMotorConfig;
 
 public IntakeReal(){
     
     lMotorConfig
         .smartCurrentLimit(40,60)
         .idleMode(IdleMode.kCoast)
-        .voltageCompensation(12);   
+        .voltageCompensation(12)
+        .inverted(true);   
 
     // Right follows Left
-    fMotorConfig= lMotorConfig.follow(Lead).inverted(false);
+    // fMotorConfig= lMotorConfig.follow(Lead).inverted(false);
 
     Lead.configure(lMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    Follow.configure(fMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    // Follow.configure(fMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 }
 
 
@@ -42,7 +43,7 @@ public IntakeReal(){
     @Override
     public void stop() {
         Lead.stopMotor();
-        Follow.stopMotor();
+        // Follow.stopMotor();
     }
     
 }

@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Subsystems.Intake.Intake;
+import frc.robot.Subsystems.Intake.IntakeReal;
 import frc.robot.Subsystems.drive.Drive;
 import frc.robot.Subsystems.drive.GyroIOPigeon2;
 import frc.robot.Subsystems.drive.ModuleIOSpark;
@@ -30,7 +31,7 @@ public class RobotContainer {
   private final Drive drive;
 
 
-  private Intake intake= new Intake();
+  private Intake intake= new Intake(new IntakeReal());
 
   public RobotContainer() {
     drive =
@@ -53,15 +54,12 @@ public class RobotContainer {
             drive,
             () -> -driver.getLeftY(),
             () -> -driver.getLeftX(),
-            () -> driver.getRightX()));
+            () -> -driver.getRightX()));
 
             //RESET GYRO
-            driver.b().onTrue(Commands.runOnce(()->drive.resetGyro(180), drive));
+            driver.b().onTrue(Commands.runOnce(()->drive.resetGyro(0), drive));
 
-    driver.x().onTrue(Commands.runEnd(
-      ()->intake.run(),
-      ()->intake.stop(),
-      intake));
+    driver.rightTrigger().whileTrue(intake.run());
      
 
   }

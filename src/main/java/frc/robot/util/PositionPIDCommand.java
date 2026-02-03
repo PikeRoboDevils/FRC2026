@@ -6,6 +6,7 @@ package frc.robot.util;
 import static edu.wpi.first.units.Units.Centimeter;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 import static frc.robot.Subsystems.drive.DriveConstants.*;
 
@@ -68,11 +69,9 @@ public class PositionPIDCommand extends Command {
 
           var position = diff.getTranslation().getNorm() < kPositionTolerance.in(Meters);
 
-          // TODO: ADD SPEED FUNCTION
-          // var speed = mSwerve.getSpeed() < kSpeedTolerance.in(MetersPerSecond);
+          var speed = mSwerve.getSpeedMeters() < kSpeedTolerance.in(Meters);
 
-          // System.out.println("end trigger conditions R: "+ rotation + "\tP: " + position + "\tS:
-          // " + speed);
+          System.out.println("end trigger conditions R: "+ rotation + "\tP: " + position + "\tS:" + speed);
 
           return rotation && position; // && speed;
         };
@@ -133,8 +132,8 @@ public class PositionPIDCommand extends Command {
             + diff.getRotation().getMeasure().in(Degrees)
             + " deg"
             + "\nVelocity value: "
-            + "Speed Not Implemented" // mSwerve.getSpeed() + "m/s"
-        // We dont have a get speed function yet
+            + mSwerve.getSpeedMeters() + "m/s"
+
         );
   }
 

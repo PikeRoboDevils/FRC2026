@@ -39,6 +39,7 @@ import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -147,7 +148,8 @@ public class Drive extends SubsystemBase {
       Logger.recordOutput("SwerveStates/Setpoints", new SwerveModuleState[] {});
       Logger.recordOutput("SwerveStates/SetpointsOptimized", new SwerveModuleState[] {});
     }
-
+ 
+    SmartDashboard.getNumber("AnglePid", 5);
     // Update odometry
     double[] sampleTimestamps =
         modules[0].getOdometryTimestamps(); // All signals are sampled together
@@ -324,6 +326,13 @@ public class Drive extends SubsystemBase {
 
   /** Returns the maximum angular speed in radians per sec. */
   public double getMaxAngularSpeedRadPerSec() {
-    return maxSpeedMetersPerSec / driveBaseRadius;
+    // return maxSpeedMetersPerSec / driveBaseRadius;
+    return 15;
   }
+
+public double getSpeedMeters() {
+  var c2 = Math.pow(getChassisSpeeds().vxMetersPerSecond,2) +Math.pow(getChassisSpeeds().vyMetersPerSecond,2);
+  var speed = Math.sqrt(c2);
+  return speed;
+}
 }
