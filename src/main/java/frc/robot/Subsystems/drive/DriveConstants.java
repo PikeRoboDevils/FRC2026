@@ -31,7 +31,7 @@ import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Time;
 
 public class DriveConstants {
-  public static final double maxSpeedMetersPerSec = Units.feetToMeters(16);
+  public static final double maxSpeedMetersPerSec = Units.feetToMeters(15);
   public static final double odometryFrequency = 100.0; // Hz
   public static final double trackWidth = Units.inchesToMeters(27);
   public static final double wheelBase = Units.inchesToMeters(27);

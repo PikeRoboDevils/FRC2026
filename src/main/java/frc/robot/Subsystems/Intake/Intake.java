@@ -16,6 +16,12 @@ public class Intake extends SubsystemBase {
 public Command run() {
     return Commands.runEnd(()->run(0.75), ()->stop());
 }
+public Command runAuto() {
+    return Commands.run(()->run(0.75));
+}
+public Command out() {
+    return Commands.runEnd(()->run(-0.75), ()->stop());
+}
 
 public void run(double speed) {
     io.run(speed);

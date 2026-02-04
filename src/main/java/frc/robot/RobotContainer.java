@@ -8,6 +8,7 @@ package frc.robot;
 import org.littletonrobotics.junction.Logger;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -45,6 +46,11 @@ public class RobotContainer {
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser",autoChooser);
     configureBindings();
+
+    // Not working :)
+    NamedCommands.registerCommand("RunIntake", intake.runAuto());
+
+
   }
 
   private void configureBindings() {
@@ -54,13 +60,13 @@ public class RobotContainer {
             drive,
             () -> -driver.getLeftY(),
             () -> -driver.getLeftX(),
-            () -> -driver.getRightX()));
+            () -> driver.getRightX()));
 
             //RESET GYRO
             driver.b().onTrue(Commands.runOnce(()->drive.resetGyro(0), drive));
 
     driver.rightTrigger().whileTrue(intake.run());
-     
+        driver.leftTrigger().whileTrue(intake.out());
 
   }
 
