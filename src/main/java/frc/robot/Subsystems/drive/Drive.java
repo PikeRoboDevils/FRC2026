@@ -39,14 +39,12 @@ import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
-import frc.robot.Subsystems.drive.VisionSwerve.Cameras;
 import frc.robot.util.LocalADStarAK;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -54,7 +52,6 @@ import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 public class Drive extends SubsystemBase {
-  private VisionSwerve vision;
   static final Lock odometryLock = new ReentrantLock();
   private final GyroIO gyroIO;
   private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
@@ -91,13 +88,7 @@ public class Drive extends SubsystemBase {
     // Usage reporting for swerve template
     HAL.report(tResourceType.kResourceType_RobotDrive, tInstances.kRobotDriveSwerve_AdvantageKit);
 
-        if (true) { //TODO: add a constant for this
-      setupPhotonVision();
-      // doesnt start odometry thread if using vision
-    } else {
-    // Start odometry thread
     SparkOdometryThread.getInstance().start();
-    }
     // Configure AutoBuilder for PathPlanner
     AutoBuilder.configure(
         this::getPose,
@@ -149,17 +140,6 @@ public class Drive extends SubsystemBase {
       for (var module : modules) {
         module.stop();
       }
-
-        // When vision is enabled we must manually update odometry in SwerveDrive
-    if (true) { //TODO: add cnstant for this 
-      // updateOdometry();
-      vision.updateVisionField();
-      updatePoseWithVision();
-      
-      Logger.recordOutput("Odometry/Vision", vision.ReturnPhotonPose());
-      Logger.recordOutput("bestTarget", vision.getBestTagId(Cameras.CAM_1));
-      // vision
-    }
     }
 
     // Log empty setpoint states when disabled
@@ -329,14 +309,6 @@ public class Drive extends SubsystemBase {
   public void resetGyro(double angle) {
     poseEstimator.resetRotation(new Rotation2d(Math.toRadians(angle)));
   }
-  /** Adds a new timestamped vision measurement. */
-  public void addVisionMeasurement(
-      Pose2d visionRobotPoseMeters,
-      double timestampSeconds,
-      Matrix<N3, N1> visionMeasurementStdDevs) {
-    poseEstimator.addVisionMeasurement(
-        visionRobotPoseMeters, timestampSeconds, visionMeasurementStdDevs);
-  }
 
   /** Returns the maximum linear speed in meters per sec. */
   public double getMaxLinearSpeedMetersPerSec() {
@@ -354,22 +326,13 @@ public double getSpeedMeters() {
   return speed;
 }
 
-  public void setupPhotonVision() {
-    vision = new VisionSwerve(()->getPose(),new Field2d());
+  /** Adds a new timestamped vision measurement. */
+  public void addVisionMeasurement(
+      Pose2d visionRobotPoseMeters,
+      double timestampSeconds,
+      Matrix<N3, N1> visionMeasurementStdDevs) {
+    poseEstimator.addVisionMeasurement(
+        visionRobotPoseMeters, timestampSeconds, visionMeasurementStdDevs);
   }
 
-    /** Update the pose estimation with vision data. */
-  public void updatePoseWithVision() {
-    vision.updatePoseEstimation(this);
-  }
-
-  /**
-   * Get the pose while updating with vision readings.
-   *
-   * @return The robots pose with the vision estimates in place.
-   */
-  public Pose2d getVisionPose() {
-    vision.updatePoseEstimation(this);
-    return getPose();
-  }
 }

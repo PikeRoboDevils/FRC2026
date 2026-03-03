@@ -1,4 +1,4 @@
-package frc.robot.Subsystems.drive;
+package frc.robot.Subsystems;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
@@ -17,6 +17,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import java.awt.Desktop;
 import java.io.IOException;
@@ -27,6 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
+
+import org.littletonrobotics.junction.Logger;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
@@ -43,7 +46,7 @@ import org.photonvision.targeting.PhotonTrackedTarget;
  * Example PhotonVision class to aid in the pursuit of accurate odometry. Taken from
  * https://gitlab.com/ironclad_code/ironclad-2024/-/blob/master/src/main/java/frc/robot/vision/Vision.java?ref_type=heads
  */
-public class VisionSwerve {
+public class Vision extends SubsystemBase{
 
   /** April Tag Field Layout of the year. */
   public static final AprilTagFieldLayout fieldLayout =
@@ -56,7 +59,9 @@ public class VisionSwerve {
   private double longDistangePoseEstimationCount = 0;
 
   /** Current pose from the pose estimator using wheel odometry. */
-  private Supplier<Pose2d> currentPose;
+  // private Supplier<Pose2d> currentPose;
+
+  private  VisionConsumer consumer;
 
   /** Photon Vision camera properties simulation. */
   /** Field from {@link swervelib.SwerveDrive#field} */
@@ -70,9 +75,10 @@ public class VisionSwerve {
    * @param currentPose Current pose supplier, should reference {@link SwerveDrive#getPose()}
    * @param field Current field, should be {@link SwerveDrive#field}
    */
-  public VisionSwerve(Supplier<Pose2d> currentPose,Field2d field) {
-    this.currentPose = currentPose;
-    this.field2d = field;
+  public Vision(VisionConsumer consumer) {
+    this.consumer = consumer;
+    // this.currentPose = currentPose;
+    field2d = new Field2d();
     lastPose = new Pose3d();
 
     if (Robot.isSimulation()) {
@@ -86,6 +92,12 @@ public class VisionSwerve {
 
       openSimCameraViews();
     }
+  }
+
+  @Override
+  public void periodic() {
+      // Logger.recordOutput("Vision/Field2d", field2d);
+      updatePoseEstimation();
   }
 
   /**
@@ -111,7 +123,7 @@ public class VisionSwerve {
    *
    * @param swerveDrive {@link SwerveDrive} instance.
    */
-  public void updatePoseEstimation(Drive swerveDrive) {
+  public void updatePoseEstimation() {
 
     for (Cameras camera : Cameras.values()) {
       Optional<EstimatedRobotPose> poseEst = getEstimatedGlobalPose(camera);
@@ -119,7 +131,9 @@ public class VisionSwerve {
         var pose = poseEst.get();
 
         if (filterPose(poseEst).isPresent()) {
-          swerveDrive.addVisionMeasurement(
+
+          // Sends Pose to Drive Subsystem
+          consumer.accept(
               pose.estimatedPose.toPose2d(), pose.timestampSeconds, getEstimationStdDevs(camera));
         }
       }
@@ -172,7 +186,7 @@ public class VisionSwerve {
 
   /**
    * The standard deviations of the estimated pose from {@link
-   * VisionSwerve#getEstimatedGlobalPose(Cameras)}, for use with {@link
+   * Vision#getEstimatedGlobalPose(Cameras)}, for use with {@link
    * edu.wpi.first.math.estimator.SwerveDrivePoseEstimator SwerveDrivePoseEstimator}. This should
    * only be used when there are targets visible.
    *
@@ -237,19 +251,21 @@ public class VisionSwerve {
         return Optional.empty();
       }
 
-      // est pose is very far from recorded robot pose
-      if (PhotonUtils.getDistanceToPose(currentPose.get(), pose.get().estimatedPose.toPose2d())
-          > 1) {
-        longDistangePoseEstimationCount++;
+/*  Optimization we might wanna bring back*/
 
-        // if it calculates that were 10 meter away for more than 10 times in a row its
-        // probably right
-        if (longDistangePoseEstimationCount < 10) {
-          return Optional.empty();
-        }
-      } else {
-        longDistangePoseEstimationCount = 0;
-      }
+      // // est pose is very far from recorded robot pose
+      // if (PhotonUtils.getDistanceToPose(currentPose.get(), pose.get().estimatedPose.toPose2d())
+      //     > 1) {
+      //   longDistangePoseEstimationCount++;
+
+      //   // if it calculates that were 10 meter away for more than 10 times in a row its
+      //   // probably right
+      //   if (longDistangePoseEstimationCount < 10) {
+      //     return Optional.empty();
+      //   }
+      // } else {
+      //   longDistangePoseEstimationCount = 0;
+      // }
       return pose;
     }
     return Optional.empty();
@@ -277,17 +293,17 @@ public class VisionSwerve {
     }
   }
 
-  /**
-   * Get distance of the robot from the AprilTag pose.
-   *
-   * @param id AprilTag ID
-   * @return Distance
-   */
-  public double getDistanceFromAprilTag(int id) {
-    Optional<Pose3d> tag = fieldLayout.getTagPose(id);
-    return tag.map(pose3d -> PhotonUtils.getDistanceToPose(currentPose.get(), pose3d.toPose2d()))
-        .orElse(-1.0);
-  }
+  // /**
+  //  * Get distance of the robot from the AprilTag pose.
+  //  *
+  //  * @param id AprilTag ID
+  //  * @return Distance
+  //  */
+  // public double getDistanceFromAprilTag(int id) {
+  //   Optional<Pose3d> tag = fieldLayout.getTagPose(id);
+  //   return tag.map(pose3d -> PhotonUtils.getDistanceToPose(currentPose.get(), pose3d.toPose2d()))
+  //       .orElse(-1.0);
+  // }
 
   /**
    * Get tracked target from a camera of AprilTagID
@@ -436,7 +452,7 @@ public class VisionSwerve {
 
       poseEstimator =
           new PhotonPoseEstimator(
-              VisionSwerve.fieldLayout,
+              Vision.fieldLayout,
               PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
               robotToCamTransform);
       poseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
@@ -476,5 +492,16 @@ public class VisionSwerve {
         systemSim.addCamera(cameraSim, robotToCamTransform);
       }
     }
+    
+}
+
+// Abstraction!
+@FunctionalInterface
+  public static interface VisionConsumer {
+    public void accept(
+        Pose2d visionRobotPoseMeters,
+        double timestampSeconds,
+        Matrix<N3, N1> visionMeasurementStdDevs);
   }
+  
 }
