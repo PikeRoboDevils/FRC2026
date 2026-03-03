@@ -22,7 +22,6 @@ public class hopperReal implements hopperIO {
         .voltageCompensation(12); 
 
 
-
         storage.configure(storageConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
     @Override

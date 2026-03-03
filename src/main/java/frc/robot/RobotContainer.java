@@ -23,6 +23,8 @@ import frc.robot.Subsystems.Intake.IntakeReal;
 import frc.robot.Subsystems.drive.Drive;
 import frc.robot.Subsystems.drive.GyroIOPigeon2;
 import frc.robot.Subsystems.drive.ModuleIOSpark;
+import frc.robot.Subsystems.hopper.hopper;
+import frc.robot.Subsystems.hopper.hopperReal;
 import frc.robot.commands.DriveCommands;
 
 public class RobotContainer {
@@ -32,10 +34,12 @@ public class RobotContainer {
 
   private final SendableChooser<Command> autoChooser;
   private final Drive drive;
+  @SuppressWarnings("unused")
   private final Vision vision;
 
 
   private Intake intake= new Intake(new IntakeReal());
+  private hopper hopper = new hopper(new hopperReal());
 
   public RobotContainer() {
     drive =
@@ -71,9 +75,14 @@ public class RobotContainer {
             //RESET GYRO
             driver.b().onTrue(Commands.runOnce(()->drive.resetGyro(0), drive));
 
+
+//INTAKE CONTROLS
     driver.rightTrigger().whileTrue(intake.run());
         driver.leftTrigger().whileTrue(intake.out());
 
+//HOPPER CONTROLS
+    driver.rightBumper().whileTrue(hopper.down());
+        driver.leftBumper().whileTrue(hopper.up());
   }
 
   public Command getAutonomousCommand() {
