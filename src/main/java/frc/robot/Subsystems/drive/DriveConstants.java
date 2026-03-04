@@ -44,11 +44,17 @@ public class DriveConstants {
         new Translation2d(-trackWidth / 2.0, -wheelBase / 2.0)
       };
 
+/* Test Bot */
+//   public static final Rotation2d frontLeftZeroRotation = new Rotation2d(5.556);
+//   public static final Rotation2d frontRightZeroRotation = new Rotation2d(4.781);
+//   public static final Rotation2d backLeftZeroRotation = new Rotation2d(6.256);
+//   public static final Rotation2d backRightZeroRotation = new Rotation2d(1.255);
 
-  public static final Rotation2d frontLeftZeroRotation = new Rotation2d(5.556);
-  public static final Rotation2d frontRightZeroRotation = new Rotation2d(4.781);
-  public static final Rotation2d backLeftZeroRotation = new Rotation2d(6.256);
-  public static final Rotation2d backRightZeroRotation = new Rotation2d(1.255);
+/* 2025 Bot */
+  public static final Rotation2d frontLeftZeroRotation = new Rotation2d(0.3052270);
+  public static final Rotation2d frontRightZeroRotation = new Rotation2d(0.6216120);
+  public static final Rotation2d backLeftZeroRotation = new Rotation2d(0.4421437);
+  public static final Rotation2d backRightZeroRotation = new Rotation2d(0.2732941);
 
   // Device CAN IDs
   public static final int pigeonCanId = 11;

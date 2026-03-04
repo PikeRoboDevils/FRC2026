@@ -19,6 +19,8 @@ import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
+import frc.robot.Constants.CameraConstants;
+
 import java.awt.Desktop;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -379,20 +381,20 @@ public class Vision extends SubsystemBase{
 
   enum Cameras {
     CAM_1(
-        "Test cam",
-        new Rotation3d(0,0,0), // rotation of camera
-        new Translation3d(Units.inchesToMeters(13.5),0,Units.inchesToMeters(7)), // transform of camera (dont forget forwatd+ left+ up+)
+        CameraConstants.CAM1N,
+        CameraConstants.CAM1R, // rotation of camera
+        CameraConstants.CAM1T,
         VecBuilder.fill(n1StndardDevs, n2StandardDevs, n4StandardDevs),
         VecBuilder.fill(n1StndardDevs * 0, n2StandardDevs * 0, n4StandardDevs * 0) // std devs
         ),
 
-    // CAM_2(
-    //     PoseCameraConstants.CAM2N,
-    //     PoseCameraConstants.CAM2R, // rotation of camera
-    //     PoseCameraConstants.CAM2T, // transform of camera (dont forget forwatd+ left+ up+)
-    //     VecBuilder.fill(n1StndardDevs, n2StandardDevs, n4StandardDevs),
-    //     VecBuilder.fill(n1StndardDevs * 0, n2StandardDevs * 0, n4StandardDevs * 0) // std devs
-    //     ),
+    CAM_2(
+        CameraConstants.CAM2N,
+        CameraConstants.CAM2R, // rotation of camera
+        CameraConstants.CAM2T, // transform of camera (dont forget forwatd+ left+ up+)
+        VecBuilder.fill(n1StndardDevs, n2StandardDevs, n4StandardDevs),
+        VecBuilder.fill(n1StndardDevs * 0, n2StandardDevs * 0, n4StandardDevs * 0) // std devs
+        ),
   // CAM_3(
   //   PoseCameraConstants.CAM3N,
   //     PoseCameraConstants.CAM3R, // rotation of camera

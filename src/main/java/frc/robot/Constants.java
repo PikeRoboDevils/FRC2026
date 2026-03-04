@@ -13,6 +13,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
 
 /**
@@ -39,4 +42,56 @@ public final class Constants {
     public static final boolean hopper = false;
     public static final boolean intake = false;
   }
+
+
+  /* Vision Test Bot  */
+  public static class TestBot {
+    // Cam 1 is roughly on top of the lower mount for elevator lokking in towards the reef tags.
+    public static String CAM1N = "Test cam";
+
+    public static Rotation3d CAM1R =
+        new Rotation3d(0, 0, 0);
+
+    public static Translation3d CAM1T =
+        new Translation3d(Units.inchesToMeters(13.5),0,Units.inchesToMeters(7));
+}
+
+
+/* Vision 2025 Poses */
+  public static class CameraConstants {
+    // Cam 1 is roughly on top of the lower mount for elevator lokking in towards the reef tags.
+    public static String CAM1N = "LEFT_CAM";
+
+    public static Rotation3d CAM1R =
+        new Rotation3d(0, Units.degreesToRadians(25), Units.degreesToRadians(40));
+
+    public static Translation3d CAM1T =
+        new Translation3d(
+            Units.inchesToMeters(-4), // transform of camera (dont forget forward+ left+ up+)
+            Units.inchesToMeters(13),
+            Units.inchesToMeters(8));
+
+    // public static String CAM3N = "ELEV_CAM";
+
+    // public static Rotation3d CAM3R =
+    //     new Rotation3d(Math.PI, 0, 0);
+
+    // public static Translation3d CAM3T =
+    //     new Translation3d(
+    //         Units.inchesToMeters(4.5), // transform of camera (dont forget forward+ left+ up+)
+    //         Units.inchesToMeters(14), // to right
+    //         Units.inchesToMeters(14));
+
+    public static String CAM2N = "RIGHT_CAM";
+
+    public static Rotation3d CAM2R =
+        new Rotation3d(0, Units.degreesToRadians(25), Units.degreesToRadians(180));
+
+    public static Translation3d CAM2T =
+        new Translation3d(
+            Units.inchesToMeters(-4), // transform of camera (dont forget forward+ left+ up+)
+            Units.inchesToMeters(-13),
+            Units.inchesToMeters(8));
+  }
+  
 }

@@ -20,11 +20,13 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.systems;
 import frc.robot.Subsystems.Vision;
 import frc.robot.Subsystems.Intake.Intake;
+import frc.robot.Subsystems.Intake.IntakeIO;
 import frc.robot.Subsystems.Intake.IntakeReal;
 import frc.robot.Subsystems.drive.Drive;
 import frc.robot.Subsystems.drive.GyroIOPigeon2;
 import frc.robot.Subsystems.drive.ModuleIOSpark;
 import frc.robot.Subsystems.hopper.hopper;
+import frc.robot.Subsystems.hopper.hopperIO;
 import frc.robot.Subsystems.hopper.hopperReal;
 import frc.robot.commands.DriveCommands;
 
@@ -57,12 +59,13 @@ public class RobotContainer {
       if (systems.intake) {
         intake = new Intake(new IntakeReal());
       } else {
-        // intake = new Intake(new IntakeSim());
+        //Somethings up here
+        // intake = new Intake(new IntakeIO());
       }
       if (systems.hopper) {
         hopper = new hopper(new hopperReal());
       } else {
-        // hopper = new hopper(new hopperSim());
+        // hopper = new hopper(new hopperIO());
       }
 
 
@@ -89,13 +92,13 @@ public class RobotContainer {
             driver.b().onTrue(Commands.runOnce(()->drive.resetGyro(0), drive));
 
 
-//INTAKE CONTROLS
-    driver.rightTrigger().whileTrue(intake.run());
-        driver.leftTrigger().whileTrue(intake.out());
+// //INTAKE CONTROLS
+//     driver.rightTrigger().whileTrue(intake.run());
+//         driver.leftTrigger().whileTrue(intake.out());
 
-//HOPPER CONTROLS
-    driver.rightBumper().whileTrue(hopper.down());
-        driver.leftBumper().whileTrue(hopper.up());
+// //HOPPER CONTROLS
+//     driver.rightBumper().whileTrue(hopper.down());
+//         driver.leftBumper().whileTrue(hopper.up());
   }
 
   public Command getAutonomousCommand() {
