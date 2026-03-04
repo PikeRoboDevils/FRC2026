@@ -34,4 +34,9 @@ public final class Constants {
     /** Replaying from a log file. */
     REPLAY
   }
+
+  public class systems{
+    public static final boolean hopper = false;
+    public static final boolean intake = false;
+  }
 }

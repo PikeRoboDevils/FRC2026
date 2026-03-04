@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants.systems;
 import frc.robot.Subsystems.Vision;
 import frc.robot.Subsystems.Intake.Intake;
 import frc.robot.Subsystems.Intake.IntakeReal;
@@ -38,8 +39,8 @@ public class RobotContainer {
   private final Vision vision;
 
 
-  private Intake intake= new Intake(new IntakeReal());
-  private hopper hopper = new hopper(new hopperReal());
+  private Intake intake;
+  private hopper hopper;
 
   public RobotContainer() {
     drive =
@@ -53,12 +54,24 @@ public class RobotContainer {
     vision = 
       new Vision(drive::addVisionMeasurement);
 
+      if (systems.intake) {
+        intake = new Intake(new IntakeReal());
+      } else {
+        // intake = new Intake(new IntakeSim());
+      }
+      if (systems.hopper) {
+        hopper = new hopper(new hopperReal());
+      } else {
+        // hopper = new hopper(new hopperSim());
+      }
+
+
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser",autoChooser);
     configureBindings();
 
     // Not working :)
-    NamedCommands.registerCommand("RunIntake", intake.runAuto());
+    // NamedCommands.registerCommand("RunIntake", intake.runAuto());
 
 
   }

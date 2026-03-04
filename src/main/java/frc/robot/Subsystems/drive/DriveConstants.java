@@ -53,15 +53,27 @@ public class DriveConstants {
   // Device CAN IDs
   public static final int pigeonCanId = 11;
 
-  public static final int frontLeftDriveCanId = 9;
-  public static final int backLeftDriveCanId = 6;
-  public static final int frontRightDriveCanId = 3;
-  public static final int backRightDriveCanId = 5;
+  /* Test Bot IDs */
+//   public static final int frontLeftDriveCanId = 9;
+//   public static final int backLeftDriveCanId = 6;
+//   public static final int frontRightDriveCanId = 3;
+//   public static final int backRightDriveCanId = 5;
 
-  public static final int frontLeftTurnCanId = 8;
-  public static final int backLeftTurnCanId = 7;
-  public static final int frontRightTurnCanId = 2;
-  public static final int backRightTurnCanId = 4;
+//   public static final int frontLeftTurnCanId = 8;
+//   public static final int backLeftTurnCanId = 7;
+//   public static final int frontRightTurnCanId = 2;
+//   public static final int backRightTurnCanId = 4;
+
+/* 2025 Bot IDs */
+  public static final int frontLeftDriveCanId = 5;
+  public static final int backLeftDriveCanId = 7;
+  public static final int frontRightDriveCanId = 4;
+  public static final int backRightDriveCanId = 10;
+
+  public static final int frontLeftTurnCanId = 6;
+  public static final int backLeftTurnCanId = 8;
+  public static final int frontRightTurnCanId = 3;
+  public static final int backRightTurnCanId = 9;
 
   // Drive motor configuration
   public static final int driveMotorCurrentLimit = 40;
