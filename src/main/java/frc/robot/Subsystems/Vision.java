@@ -52,7 +52,7 @@ public class Vision extends SubsystemBase{
 
   /** April Tag Field Layout of the year. */
   public static final AprilTagFieldLayout fieldLayout =
-      AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
+      AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded);
 
   /** Photon Vision Simulation */
   public VisionSystemSim visionSim;
@@ -135,6 +135,7 @@ public class Vision extends SubsystemBase{
         if (filterPose(poseEst).isPresent()) {
 
           // Sends Pose to Drive Subsystem
+          Logger.recordOutput("Vision/Pose",pose.estimatedPose.toPose2d());
           consumer.accept(
               pose.estimatedPose.toPose2d(), pose.timestampSeconds, getEstimationStdDevs(camera));
         }
@@ -226,7 +227,7 @@ public class Vision extends SubsystemBase{
     } else {
       estStdDevs =
           estStdDevs.times(
-              1 + (avgDist * avgDist / 50)); //30 is maxVisionStdDevsDistance
+              1 + (avgDist * avgDist / 30)); //30 is maxVisionStdDevsDistance
     }
 
     return estStdDevs;

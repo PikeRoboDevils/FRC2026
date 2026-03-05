@@ -330,7 +330,8 @@ public double getSpeedMeters() {
   public void addVisionMeasurement(
       Pose2d visionRobotPoseMeters,
       double timestampSeconds,
-      Matrix<N3, N1> visionMeasurementStdDevs) {
+      Matrix<N3, N1> visionMeasurementStdDevs)
+       {
     poseEstimator.addVisionMeasurement(
         visionRobotPoseMeters, timestampSeconds, visionMeasurementStdDevs);
   }
