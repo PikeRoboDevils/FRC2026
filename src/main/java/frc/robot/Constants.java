@@ -47,8 +47,8 @@ public final class Constants {
 
   public class KeyPoses{
     // not set yet
-    public static final Pose2d LeftShoot = new Pose2d(3,3,new Rotation2d());
-    public static final Pose2d RightShoot = new Pose2d(1,3,new Rotation2d());
+    public static final Pose2d LeftShoot = new Pose2d(3.15,5.3,new Rotation2d());
+    public static final Pose2d RightShoot = new Pose2d(3.1,2.1,new Rotation2d());
   }
 
 

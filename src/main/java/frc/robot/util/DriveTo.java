@@ -41,7 +41,7 @@ public class DriveTo {
    */
   public Command getPathFromWaypoint(Pose2d waypoint) {
     List<Waypoint> waypoints =
-        PathPlannerPath.waypointsFromPoses(
+        PathPlannerPath.waypointsFromPoses(mSwerve.getPose(),
             new Pose2d(
                 mSwerve.getPose().getTranslation(),
                 new Rotation2d(

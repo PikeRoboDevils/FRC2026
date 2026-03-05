@@ -69,7 +69,10 @@ public class Aim {
         
     return Commands.defer(
         () -> {
-          return OverideRotation(targets.get(target),X,Y);
+        //   return OverideRotation(targets.get(target),X,Y);
+        return DriveCommands.joystickDriveAtAngle(mSwerve, X, Y, 
+            ()->mSwerve.getPose().relativeTo(new Pose2d(0,0,new Rotation2d())).getRotation()
+            );
         },
         Set.of());
   }

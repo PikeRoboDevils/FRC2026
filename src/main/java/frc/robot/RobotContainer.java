@@ -10,6 +10,8 @@ import org.littletonrobotics.junction.Logger;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -79,6 +81,8 @@ public class RobotContainer {
         hopper = new hopper(new hopperIO(){});
       }
 
+      this.autoAim = new Aim(drive, AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded));
+      this.autoDrive = new DriveTo(drive,AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded));
 
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser",autoChooser);
@@ -115,7 +119,7 @@ public class RobotContainer {
 
 // Aim at Hub
     driver.y().whileTrue(
-      autoAim.at("HUB",
+      autoAim.at("TOWARD 0,0",
             () -> -driver.getLeftY(),
             () -> -driver.getLeftX()));
 
