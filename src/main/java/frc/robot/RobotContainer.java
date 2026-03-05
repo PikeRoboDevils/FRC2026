@@ -11,12 +11,15 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants.KeyPoses;
+import frc.robot.Constants.Mode;
 import frc.robot.Constants.systems;
 import frc.robot.Subsystems.Vision;
 import frc.robot.Subsystems.Intake.Intake;
@@ -29,6 +32,8 @@ import frc.robot.Subsystems.hopper.hopper;
 import frc.robot.Subsystems.hopper.hopperIO;
 import frc.robot.Subsystems.hopper.hopperReal;
 import frc.robot.commands.DriveCommands;
+import frc.robot.util.Aim;
+import frc.robot.util.DriveTo;
 
 public class RobotContainer {
   private CommandXboxController driver = new CommandXboxController(0);
@@ -44,6 +49,9 @@ public class RobotContainer {
   private Intake intake;
   private hopper hopper;
 
+  private Aim autoAim;
+  private DriveTo autoDrive;
+
   public RobotContainer() {
     drive =
             new Drive(
@@ -56,16 +64,19 @@ public class RobotContainer {
     vision = 
       new Vision(drive::addVisionMeasurement);
 
+      // Setup for new programmers
+      if (Constants.currentMode == Mode.SIM){}
+
+      // Select Subsystems
       if (systems.intake) {
         intake = new Intake(new IntakeReal());
       } else {
-        //Somethings up here
-        // intake = new Intake(new IntakeIO());
+        intake = new Intake(new IntakeIO() {});
       }
       if (systems.hopper) {
         hopper = new hopper(new hopperReal());
       } else {
-        // hopper = new hopper(new hopperIO());
+        hopper = new hopper(new hopperIO(){});
       }
 
 
@@ -74,7 +85,7 @@ public class RobotContainer {
     configureBindings();
 
     // Not working :)
-    // NamedCommands.registerCommand("RunIntake", intake.runAuto());
+    NamedCommands.registerCommand("RunIntake", intake.runAuto());
 
 
   }
@@ -92,13 +103,30 @@ public class RobotContainer {
             driver.b().onTrue(Commands.runOnce(()->drive.resetGyro(0), drive));
 
 
-// //INTAKE CONTROLS
-//     driver.rightTrigger().whileTrue(intake.run());
-//         driver.leftTrigger().whileTrue(intake.out());
+//INTAKE CONTROLS
+    driver.rightTrigger().whileTrue(intake.run());
+        driver.leftTrigger().whileTrue(intake.out());
 
-// //HOPPER CONTROLS
-//     driver.rightBumper().whileTrue(hopper.down());
-//         driver.leftBumper().whileTrue(hopper.up());
+//HOPPER CONTROLS
+    operater.rightBumper().whileTrue(hopper.down());
+        operater.leftBumper().whileTrue(hopper.up());
+
+// AUTOMATION
+
+// Aim at Hub
+    driver.y().whileTrue(
+      autoAim.at("HUB",
+            () -> -driver.getLeftY(),
+            () -> -driver.getLeftX()));
+
+  // Drive to Shooting positions
+    driver.rightBumper().whileTrue(
+      autoDrive.generateCommand(
+         KeyPoses.RightShoot));
+
+    driver.leftBumper().whileTrue(
+      autoDrive.generateCommand(KeyPoses.LeftShoot));
+
   }
 
   public Command getAutonomousCommand() {

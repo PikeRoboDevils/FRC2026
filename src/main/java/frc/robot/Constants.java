@@ -13,6 +13,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
@@ -41,6 +43,12 @@ public final class Constants {
   public class systems{
     public static final boolean hopper = false;
     public static final boolean intake = false;
+  }
+
+  public class KeyPoses{
+    // not set yet
+    public static final Pose2d LeftShoot = new Pose2d(3,3,new Rotation2d());
+    public static final Pose2d RightShoot = new Pose2d(1,3,new Rotation2d());
   }
 
 

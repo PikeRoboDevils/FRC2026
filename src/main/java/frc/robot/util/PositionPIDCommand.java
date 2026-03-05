@@ -15,11 +15,13 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.trajectory.PathPlannerTrajectoryState;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.networktables.BooleanPublisher;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.units.measure.Time;
+import edu.wpi.first.util.MsvcRuntimeException;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -30,6 +32,7 @@ public class PositionPIDCommand extends Command {
 
   public Drive mSwerve;
   public final Pose2d goalPose;
+    public final Rotation2d target;
   private PPHolonomicDriveController mDriveController =
       new PPHolonomicDriveController(new PIDConstants(1), new PIDConstants(1)); // NOT TUNED
   // PPHolonomicController is the built in path following controller for holonomic drive trains;
@@ -54,6 +57,7 @@ public class PositionPIDCommand extends Command {
   private PositionPIDCommand(Drive mSwerve, Pose2d goalPose) {
     this.mSwerve = mSwerve;
     this.goalPose = goalPose;
+    this.target = goalPose.getRotation();
 
     booleanSupplier =
         () -> {
@@ -81,6 +85,35 @@ public class PositionPIDCommand extends Command {
     endTriggerDebounced = endTrigger.debounce(kEndTriggerDebounce.in(Seconds));
   }
 
+
+  // AIM PID COMMAND
+  private PositionPIDCommand(Drive mSwerve, Rotation2d target) {
+    this.mSwerve = mSwerve;
+    this.goalPose = mSwerve.getPose();
+    this.target = target;
+
+    booleanSupplier =
+        () -> {
+          Rotation2d diff = mSwerve.getPose().getRotation().minus(target);
+
+          var rotation =
+              MathUtil.isNear(
+                  0.0,
+                  diff.getRotations(),
+                  kRotationTolerance.getRotations(),
+                  0.0,
+                  1.0);
+          
+          return rotation;// Might not want it to end?
+        };
+
+    endTrigger = new Trigger(booleanSupplier);
+
+    endTriggerDebounced = endTrigger.debounce(kEndTriggerDebounce.in(Seconds));
+  }
+
+  // Self Calling Commands 
+
   public static Command generateCommand(
       Drive swerve, Pose2d goalPose, Time timeout, Boolean freeze) {
     return new PositionPIDCommand(swerve, goalPose)
@@ -92,6 +125,13 @@ public class PositionPIDCommand extends Command {
               }
             });
   }
+
+    public static Command overideDrive(
+      Drive swerve, Rotation2d target) {
+    return new PositionPIDCommand(swerve, target);
+  }
+
+  // WPILIB COMMAND FUNCTIONS
 
   @Override
   public void initialize() {
@@ -107,7 +147,10 @@ public class PositionPIDCommand extends Command {
     endTriggerLogger.accept(endTrigger.getAsBoolean());
     ChassisSpeeds speeds =
         mDriveController.calculateRobotRelativeSpeeds(mSwerve.getPose(), goalState);
+
     mSwerve.runVelocity(speeds);
+    
+    // mSwerve.OverideRotation(target);
 
     xErrLogger.accept(mSwerve.getPose().getX() - goalPose.getX());
     yErrLogger.accept(mSwerve.getPose().getY() - goalPose.getY());
