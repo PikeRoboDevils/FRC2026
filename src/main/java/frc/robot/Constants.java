@@ -17,6 +17,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
 
@@ -44,6 +45,25 @@ public final class Constants {
     public static final boolean hopper = false;
     public static final boolean intake = false;
   }
+
+  public static class HopperConstants {
+      public static final double kP = 0; 
+      public static final double kD = 0;
+      
+      public static final double upSetpoint = 0; 
+      public static final double midSetpoint = 0.5; 
+      public static final double downSetpoint = 1;
+
+      public static final double positionConversionFactor = 1;
+  }
+
+  public static class ShooterConstants {
+    public static final double kP = 1;
+    public static final double kD = 0;
+
+    public static final double velocityConversionFactor = 1;
+    
+  } 
 
   public class KeyPoses{
     // not set yet

@@ -6,7 +6,7 @@ public interface ShootIO {
 
     @AutoLog
     public static class ShootIOInputs {
-    
+        public double velocity;
     }
 
     public default void updateInputs(ShootIOInputs inputs) {}

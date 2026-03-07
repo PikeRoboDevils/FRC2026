@@ -8,6 +8,7 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import static frc.robot.Constants.ShooterConstants.*;
 
 public class ShootReal implements ShootIO{
 
@@ -29,6 +30,11 @@ public ShootReal(){
     Lead.configure(lMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     Follow.configure(fMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 }
+
+    @Override
+    public void updateInputs(ShootIOInputs inputs) {
+        inputs.velocity = velocityConversionFactor * (Lead.getEncoder().getVelocity() + Follow.getEncoder().getVelocity())/2;
+    }
 
     @Override
     public void run(double speed) {

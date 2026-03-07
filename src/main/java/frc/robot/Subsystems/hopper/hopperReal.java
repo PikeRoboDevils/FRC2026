@@ -1,5 +1,7 @@
 package frc.robot.Subsystems.hopper;
 
+import static frc.robot.Constants.HopperConstants.positionConversionFactor;
+
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -23,6 +25,12 @@ public class hopperReal implements hopperIO {
 
 
         storage.configure(storageConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    }
+
+    @Override
+    public void updateInputs(hopperIOInputs inputs) {
+
+        inputs.position = storage.getEncoder().getPosition() * positionConversionFactor;
     }
     @Override
     public void run(double speed) {
