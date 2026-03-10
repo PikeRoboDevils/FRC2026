@@ -47,7 +47,25 @@ public final class Constants {
   public class systems{
     public static final boolean hopper = false;
     public static final boolean intake = false;
+    public static final boolean climber = false;
+    public static final boolean shooter = false;
   }
+
+  public static class CanIds {
+    public static final int ClimbLead = 0;
+    public static final int ClimbFollower = 0;
+    public static final int Hopper = 0;
+    public static final int Intake = 0;
+    public static final int ShooterLead = 0;
+    public static final int ShooterFollower = 0;
+    
+  }
+
+  public static class ClimberConstants {
+    public static final double climbPosition = 3; // Should be motor revolutions
+    public static final double kP = 0.1;
+  }
+
 
   public static class HopperConstants {
       public static final double kP = 0; 

@@ -7,9 +7,11 @@ import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import frc.robot.Constants.CanIds;
+
 public class IntakeReal implements IntakeIO {
 
-private final SparkMax Lead = new SparkMax(11,MotorType.kBrushless);
+private final SparkMax Lead = new SparkMax(CanIds.Intake,MotorType.kBrushless);
 // private final SparkMax Follow = new SparkMax(200,MotorType.kBrushless);//doesnt exitst
 private SparkBaseConfig lMotorConfig = new SparkMaxConfig();
 // private SparkBaseConfig fMotorConfig;

@@ -7,13 +7,16 @@ import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+
+import frc.robot.Constants.CanIds;
+
 import com.revrobotics.spark.config.SparkMaxConfig;
 import static frc.robot.Constants.ShooterConstants.*;
 
 public class ShootReal implements ShootIO{
 
-private final SparkMax Lead = new SparkMax(1,MotorType.kBrushless);
-private final SparkMax Follow = new SparkMax(2,MotorType.kBrushless);
+private final SparkMax Lead = new SparkMax(CanIds.ShooterLead,MotorType.kBrushless);
+private final SparkMax Follow = new SparkMax(CanIds.ShooterFollower,MotorType.kBrushless);
 private SparkBaseConfig lMotorConfig = new SparkMaxConfig();
 private SparkBaseConfig fMotorConfig;
 
