@@ -13,6 +13,9 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -120,6 +123,11 @@ public final class Constants {
             Units.inchesToMeters(-4), // transform of camera (dont forget forward+ left+ up+)
             Units.inchesToMeters(-13),
             Units.inchesToMeters(8));
+
+
+      public static PPHolonomicDriveController mDriveController =
+      new PPHolonomicDriveController(new PIDConstants(1), new PIDConstants(1)); // NOT TUNED
+  // PPHolonomicController is the built in path following controller for holonomic drive trains;
   }
   
 }

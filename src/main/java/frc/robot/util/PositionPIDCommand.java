@@ -25,6 +25,7 @@ import edu.wpi.first.util.MsvcRuntimeException;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants;
 import frc.robot.Subsystems.drive.Drive;
 import java.util.function.BooleanSupplier;
 
@@ -33,9 +34,7 @@ public class PositionPIDCommand extends Command {
   public Drive mSwerve;
   public final Pose2d goalPose;
     public final Rotation2d target;
-  private PPHolonomicDriveController mDriveController =
-      new PPHolonomicDriveController(new PIDConstants(1), new PIDConstants(1)); // NOT TUNED
-  // PPHolonomicController is the built in path following controller for holonomic drive trains;
+  
 
   private final Trigger endTrigger;
   private final Trigger endTriggerDebounced;
@@ -146,7 +145,8 @@ public class PositionPIDCommand extends Command {
 
     endTriggerLogger.accept(endTrigger.getAsBoolean());
     ChassisSpeeds speeds =
-        mDriveController.calculateRobotRelativeSpeeds(mSwerve.getPose(), goalState);
+    Constants.CameraConstants.mDriveController
+        .calculateRobotRelativeSpeeds(mSwerve.getPose(), goalState);
 
     mSwerve.runVelocity(speeds);
     

@@ -1,5 +1,6 @@
 package frc.robot.util;
 
+import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static frc.robot.Subsystems.drive.DriveConstants.*;
 
@@ -12,6 +13,8 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -30,12 +33,10 @@ import java.util.function.DoubleSupplier;
  */
 public class Aim {
 
-  public boolean isPIDLoopRunning = false;
+  private final Drive drive;
 
-  private final Drive mSwerve;
-
-  public Aim(Drive mSwerve, AprilTagFieldLayout field) {
-    this.mSwerve = mSwerve;
+  public Aim(Drive drive, AprilTagFieldLayout field) {
+    this.drive = drive;
   }
 
   /**
@@ -46,13 +47,17 @@ public class Aim {
    */
   public Command OverideRotation(Pose2d Anchor,DoubleSupplier X,DoubleSupplier Y) {
 
-    Rotation2d goalRotation = mSwerve.getPose().relativeTo(Anchor).getRotation();
+    var dX = Anchor.getMeasureX().abs(Meters)-drive.getPose().getMeasureX().abs(Meters);
 
-    // PositionPIDCommand.generateCommand(mSwerve, Anchor, kAutoAlignAdjustTimeout, false);
     
-    DriveCommands.joystickDriveAtAngle(mSwerve, X, Y, ()->goalRotation);
+    var dY = Anchor.getMeasureY().abs(Meters)-drive.getPose().getMeasureY().abs(Meters);
 
-    return Commands.none();
+
+
+
+    Rotation2d goalRotation = new Rotation2d(Math.tanh(dX/dY));
+
+    return DriveCommands.joystickDriveAtAngle(drive, X, Y, ()->goalRotation);
   }
 
   /** Will Aim at a target by overiding rotation
@@ -62,17 +67,19 @@ public class Aim {
     Map<String, Pose2d> targets = new HashMap<>();
 
     // Add key-value pairs using the put() method
-        targets.put("HUB", new Pose2d());
-        targets.put("TOWER", new Pose2d());
+        targets.put("HUB", new Pose2d(4.6,4.0,new Rotation2d(0,0)));
+        targets.put("TOWER", new Pose2d( ));
         targets.put("TOWARD 0,0", new Pose2d(0,0,new Rotation2d()));
 
         
     return Commands.defer(
         () -> {
         //   return OverideRotation(targets.get(target),X,Y);
-        return DriveCommands.joystickDriveAtAngle(mSwerve, X, Y, 
-            ()->mSwerve.getPose().relativeTo(new Pose2d(0,0,new Rotation2d())).getRotation()
+        return DriveCommands.joystickDriveAtAngle(drive, X, Y, 
+            ()->drive.getPose().relativeTo(new Pose2d(0,0,new Rotation2d())).getRotation()
             );
+
+            
         },
         Set.of());
   }
