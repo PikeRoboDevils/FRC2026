@@ -48,11 +48,17 @@ public class DriveConstants {
 //   public static final Rotation2d backLeftZeroRotation = new Rotation2d(6.256);
 //   public static final Rotation2d backRightZeroRotation = new Rotation2d(1.255);
 
-/* 2025 Bot */
-  public static final Rotation2d frontLeftZeroRotation = new Rotation2d(0.3052270);
-  public static final Rotation2d frontRightZeroRotation = new Rotation2d(0.6216120);
-  public static final Rotation2d backLeftZeroRotation = new Rotation2d(0.4421437);
-  public static final Rotation2d backRightZeroRotation = new Rotation2d(0.2732941);
+// /* 2025 Bot */
+//   public static final Rotation2d frontLeftZeroRotation = new Rotation2d(0.3052270);
+//   public static final Rotation2d frontRightZeroRotation = new Rotation2d(0.6216120);
+//   public static final Rotation2d backLeftZeroRotation = new Rotation2d(0.4421437);
+//   public static final Rotation2d backRightZeroRotation = new Rotation2d(0.2732941);
+
+  /* 2026 Bot */
+  public static final Rotation2d frontLeftZeroRotation = new Rotation2d(0.49);
+  public static final Rotation2d frontRightZeroRotation = new Rotation2d(0.45);
+  public static final Rotation2d backLeftZeroRotation = new Rotation2d(0.776);
+  public static final Rotation2d backRightZeroRotation = new Rotation2d(0.9);
 
   // Device CAN IDs
   public static final int pigeonCanId = 11;
@@ -68,16 +74,27 @@ public class DriveConstants {
 //   public static final int frontRightTurnCanId = 2;
 //   public static final int backRightTurnCanId = 4;
 
-/* 2025 Bot IDs */
-  public static final int frontLeftDriveCanId = 5;
-  public static final int backLeftDriveCanId = 7;
-  public static final int frontRightDriveCanId = 4;
-  public static final int backRightDriveCanId = 10;
+// /* 2025 Bot IDs */
+//   public static final int frontLeftDriveCanId = 5;
+//   public static final int backLeftDriveCanId = 7;
+//   public static final int frontRightDriveCanId = 4;
+//   public static final int backRightDriveCanId = 10;
 
-  public static final int frontLeftTurnCanId = 6;
-  public static final int backLeftTurnCanId = 8;
-  public static final int frontRightTurnCanId = 3;
-  public static final int backRightTurnCanId = 9;
+//   public static final int frontLeftTurnCanId = 6;
+//   public static final int backLeftTurnCanId = 8;
+//   public static final int frontRightTurnCanId = 3;
+//   public static final int backRightTurnCanId = 9;
+
+      /* 2026 bot */
+  public static final int frontLeftDriveCanId = 2;
+  public static final int backLeftDriveCanId = 9;
+  public static final int frontRightDriveCanId = 5;
+  public static final int backRightDriveCanId = 8;
+
+  public static final int frontLeftTurnCanId = 3;
+  public static final int backLeftTurnCanId = 4;
+  public static final int frontRightTurnCanId = 6 ;
+  public static final int backRightTurnCanId = 7;
 
   // Drive motor configuration
   public static final int driveMotorCurrentLimit = 40;
