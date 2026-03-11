@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.Mode;
 import frc.robot.Subsystems.Vision;
 import frc.robot.Subsystems.Climber.Climber;
@@ -103,7 +104,11 @@ public class RobotContainer {
       this.autoAim = new Aim(drive, AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded));
       this.autoDrive = new DriveTo(drive,AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded));
 
+
     autoChooser = AutoBuilder.buildAutoChooser();
+    //SYS ID
+    autoChooser.addOption("SysID", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    autoChooser.addOption("SysIDQuasistatic", drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
     SmartDashboard.putData("Auto Chooser",autoChooser);
     configureBindings();
 
