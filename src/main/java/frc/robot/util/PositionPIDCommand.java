@@ -6,12 +6,9 @@ package frc.robot.util;
 import static edu.wpi.first.units.Units.Centimeter;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Meters;
-import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 import static frc.robot.Subsystems.drive.DriveConstants.*;
 
-import com.pathplanner.lib.config.PIDConstants;
-import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.trajectory.PathPlannerTrajectoryState;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -21,7 +18,6 @@ import edu.wpi.first.networktables.BooleanPublisher;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.units.measure.Time;
-import edu.wpi.first.util.MsvcRuntimeException;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -76,7 +72,7 @@ public class PositionPIDCommand extends Command {
 
           // System.out.println("end trigger conditions R: "+ rotation + "\tP: " + position + "\tS:" + speed);
 
-          return rotation && position; // && speed;
+          return rotation && position && speed;
         };
 
     endTrigger = new Trigger(booleanSupplier);

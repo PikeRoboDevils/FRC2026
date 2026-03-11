@@ -13,7 +13,6 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -23,14 +22,11 @@ import frc.robot.Constants.CameraConstants;
 
 import java.awt.Desktop;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Supplier;
-
 import org.littletonrobotics.junction.Logger;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
@@ -58,7 +54,7 @@ public class Vision extends SubsystemBase{
   public VisionSystemSim visionSim;
 
   /** Count of times that the odom thinks we're more than 10meters away from the april tag. */
-  private double longDistangePoseEstimationCount = 0;
+  // private double longDistangePoseEstimationCount = 0;
 
   /** Current pose from the pose estimator using wheel odometry. */
   // private Supplier<Pose2d> currentPose;
@@ -155,11 +151,6 @@ public class Vision extends SubsystemBase{
    *     create the estimate
    */
   public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Cameras camera) {
-    // Alternative method if you want to use both a pose filter and standard
-    // deviations based on distance + tags seen.
-    // Optional<EstimatedRobotPose> poseEst =
-    // filterPose(camera.poseEstimator.update(getLatestResult(camera)));
-    // camera.cameraSim.getCamera().getAllUnreadResults();// TODO: add if statement for sim
     Optional<EstimatedRobotPose> poseEst = camera.poseEstimator.update(getLatestResult(camera));
     poseEst.ifPresent(
         estimatedRobotPose ->

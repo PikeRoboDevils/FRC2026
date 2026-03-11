@@ -12,21 +12,22 @@ import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Constants.KeyPoses;
 import frc.robot.Constants.Mode;
-import frc.robot.Constants.systems;
 import frc.robot.Subsystems.Vision;
+import frc.robot.Subsystems.Climber.Climber;
+import frc.robot.Subsystems.Climber.ClimberIO;
+import frc.robot.Subsystems.Climber.ClimberReal;
 import frc.robot.Subsystems.Intake.Intake;
 import frc.robot.Subsystems.Intake.IntakeIO;
 import frc.robot.Subsystems.Intake.IntakeReal;
+import frc.robot.Subsystems.Shooter.Shoot;
+import frc.robot.Subsystems.Shooter.ShootIO;
+import frc.robot.Subsystems.Shooter.ShootReal;
 import frc.robot.Subsystems.drive.Drive;
 import frc.robot.Subsystems.drive.GyroIOPigeon2;
 import frc.robot.Subsystems.drive.ModuleIOSpark;
@@ -36,6 +37,9 @@ import frc.robot.Subsystems.hopper.hopperReal;
 import frc.robot.commands.DriveCommands;
 import frc.robot.util.Aim;
 import frc.robot.util.DriveTo;
+
+import static frc.robot.Constants.KeyPoses.*;
+import static frc.robot.Constants.systems.*;
 
 public class RobotContainer {
   private CommandXboxController driver = new CommandXboxController(0);
@@ -50,6 +54,8 @@ public class RobotContainer {
 
   private Intake intake;
   private hopper hopper;
+  private Shoot shooter;
+  private Climber climber;
 
   private Aim autoAim;
   private DriveTo autoDrive;
@@ -70,15 +76,28 @@ public class RobotContainer {
       if (Constants.currentMode == Mode.SIM){}
 
       // Select Subsystems
-      if (systems.intake) {
+      if (intakeEnabled) {
         intake = new Intake(new IntakeReal());
       } else {
         intake = new Intake(new IntakeIO() {});
       }
-      if (systems.hopper) {
+
+      if (hopperEnabled) {
         hopper = new hopper(new hopperReal());
       } else {
         hopper = new hopper(new hopperIO(){});
+      }
+
+      if (shooterEnabled) {
+        shooter = new Shoot(new ShootReal());
+      } else {
+        shooter = new Shoot(new ShootIO() {});
+      }
+
+      if (climberEnabled) {
+        climber = new Climber(new ClimberReal());
+      } else {
+        climber = new Climber(new ClimberIO() {});
       }
 
       this.autoAim = new Aim(drive, AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded));
@@ -115,21 +134,28 @@ public class RobotContainer {
     operater.rightBumper().whileTrue(hopper.down());
         operater.leftBumper().whileTrue(hopper.up());
 
+// SHOOTER CONTROLS 
+    operater.rightTrigger().whileTrue(shooter.runAt(10));
+
+
+// CLIMBER CONTROLS 
+    operater.povDown().whileTrue(climber.climb());
+
 // AUTOMATION
 
 // Aim at Hub
     driver.y().whileTrue(
-      autoAim.at("TOWARD 0,0",
+      autoAim.at(HubPose,
             () -> -driver.getLeftY(),
             () -> -driver.getLeftX()));
 
   // Drive to Shooting positions
     driver.rightBumper().whileTrue(
       autoDrive.generateCommand(
-         KeyPoses.RightShoot));
+         RightShootPose));
 
     driver.leftBumper().whileTrue(
-      autoDrive.generateCommand(KeyPoses.LeftShoot));
+      autoDrive.generateCommand(LeftShootPose));
 
   }
 

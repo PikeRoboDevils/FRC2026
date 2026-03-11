@@ -13,12 +13,6 @@
 
 package frc.robot.Subsystems.drive;
 
-import static edu.wpi.first.units.Units.RadiansPerSecond;
-import static frc.robot.Subsystems.drive.DriveConstants.*;
-
-import edu.wpi.first.math.geometry.Rotation2d;
-// import org.ironmaple.simulation.drivesims.GyroSimulation;
-
 /** IO implementation for Pigeon 2. */
 public class GyroIOSim implements GyroIO {
   // private final Pigeon2 pigeon = new Pigeon2(pigeonCanId);

@@ -20,7 +20,6 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
-import frc.robot.Subsystems.drive.ModuleIO.ModuleIOInputs;
 
 import org.littletonrobotics.junction.Logger;
 

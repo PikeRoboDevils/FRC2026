@@ -6,8 +6,6 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import frc.robot.Constants.CanIds;
 
-import static frc.robot.Constants.ClimberConstants.*;
-
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;

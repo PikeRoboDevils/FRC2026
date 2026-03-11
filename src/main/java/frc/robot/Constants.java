@@ -20,7 +20,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
 
@@ -45,10 +44,10 @@ public final class Constants {
   }
 
   public class systems{
-    public static final boolean hopper = false;
-    public static final boolean intake = false;
-    public static final boolean climber = false;
-    public static final boolean shooter = false;
+    public static final boolean hopperEnabled = false;
+    public static final boolean intakeEnabled = false;
+    public static final boolean climberEnabled = false;
+    public static final boolean shooterEnabled = false;
   }
 
   public static class CanIds {
@@ -88,14 +87,17 @@ public final class Constants {
 
   public class KeyPoses{
     // not set yet
-    public static final Pose2d LeftShoot = new Pose2d(3.15,5.3,new Rotation2d());
-    public static final Pose2d RightShoot = new Pose2d(3.1,2.1,new Rotation2d());
+    public static final Pose2d LeftShootPose = new Pose2d(3.15,5.3,new Rotation2d());
+    public static final Pose2d RightShootPose = new Pose2d(3.1,2.1,new Rotation2d());
+    public static final Pose2d ClimbPose = new Pose2d(1,4,new Rotation2d());
+
+    public static final Pose2d HubPose = new Pose2d(4.3,4,new Rotation2d());
+
   }
 
 
-  /* Vision Test Bot  */
+  /* Test Bot  */
   public static class TestBot {
-    // Cam 1 is roughly on top of the lower mount for elevator lokking in towards the reef tags.
     public static String CAM1N = "Test cam";
 
     public static Rotation3d CAM1R =
@@ -106,7 +108,7 @@ public final class Constants {
 }
 
 
-/* Vision 2025 Poses */
+/* Vision 2025 */
   public static class CameraConstants {
     // Cam 1 is roughly on top of the lower mount for elevator lokking in towards the reef tags.
     public static String CAM1N = "LEFT_CAM";
@@ -114,38 +116,29 @@ public final class Constants {
     public static Rotation3d CAM1R =
         new Rotation3d(0, Units.degreesToRadians(25), Units.degreesToRadians(40));
 
+    // transform of camera (dont forget forward+ left+ up+)
     public static Translation3d CAM1T =
         new Translation3d(
-            Units.inchesToMeters(-4), // transform of camera (dont forget forward+ left+ up+)
+            Units.inchesToMeters(-4), 
             Units.inchesToMeters(13),
             Units.inchesToMeters(8));
-
-    // public static String CAM3N = "ELEV_CAM";
-
-    // public static Rotation3d CAM3R =
-    //     new Rotation3d(Math.PI, 0, 0);
-
-    // public static Translation3d CAM3T =
-    //     new Translation3d(
-    //         Units.inchesToMeters(4.5), // transform of camera (dont forget forward+ left+ up+)
-    //         Units.inchesToMeters(14), // to right
-    //         Units.inchesToMeters(14));
 
     public static String CAM2N = "RIGHT_CAM";
 
     public static Rotation3d CAM2R =
         new Rotation3d(0, Units.degreesToRadians(25), Units.degreesToRadians(180));
 
+    // transform of camera (dont forget forward+ left+ up+)
     public static Translation3d CAM2T =
         new Translation3d(
-            Units.inchesToMeters(-4), // transform of camera (dont forget forward+ left+ up+)
+            Units.inchesToMeters(-4), 
             Units.inchesToMeters(-13),
             Units.inchesToMeters(8));
 
-
+      // This PID isnt tuned
       public static PPHolonomicDriveController mDriveController =
-      new PPHolonomicDriveController(new PIDConstants(1), new PIDConstants(1)); // NOT TUNED
-  // PPHolonomicController is the built in path following controller for holonomic drive trains;
+      new PPHolonomicDriveController(new PIDConstants(1), new PIDConstants(1)); 
+
   }
   
 }
