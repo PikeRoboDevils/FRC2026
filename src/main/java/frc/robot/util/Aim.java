@@ -30,28 +30,39 @@ public class Aim {
    * @param waypoint
    * @return
    */
-  public Command OverideRotation(Pose2d Anchor,DoubleSupplier X,DoubleSupplier Y) {
-
-    var dX = Anchor.getMeasureX().abs(Meters)-drive.getPose().getMeasureX().abs(Meters);
-
-    
-    var dY = Anchor.getMeasureY().abs(Meters)-drive.getPose().getMeasureY().abs(Meters);
+  public Command OverideRotation(Rotation2d angle,DoubleSupplier X,DoubleSupplier Y) {
 
 
-    Rotation2d goalRotation = new Rotation2d(Math.atan(dX/dY));
-
-    return DriveCommands.joystickDriveAtAngle(drive, X, Y, ()->goalRotation);
+    return DriveCommands.joystickDriveAtAngle(drive, X, Y, ()->angle);
   }
 
   /** Will Aim at a target by overiding rotation
    */
   public Command at(Pose2d target,DoubleSupplier X,DoubleSupplier Y) {
+      var dX = target.getMeasureX().abs(Meters)-drive.getPose().getMeasureX().abs(Meters);
+
+    
+    var dY = target.getMeasureY().abs(Meters)-drive.getPose().getMeasureY().abs(Meters);
+
+
+    Rotation2d goalRotation = new Rotation2d(Math.atan(dX/dY));
+   
+    return Commands.defer(
+        () -> {
+          return OverideRotation(goalRotation,X,Y);  
+        },
+        Set.of());
+  }
+
+   /** Will Aim at a target by overiding rotation given an angle
+   */
+  public Command at(double angle,DoubleSupplier X,DoubleSupplier Y) {
 
   
         
     return Commands.defer(
         () -> {
-          return OverideRotation(target,X,Y);
+          return OverideRotation(new Rotation2d(angle),X,Y);
 
             
         },

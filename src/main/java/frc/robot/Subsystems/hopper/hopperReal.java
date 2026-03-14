@@ -2,16 +2,20 @@ package frc.robot.Subsystems.hopper;
 
 import static frc.robot.Constants.HopperConstants.positionConversionFactor;
 
+import com.fasterxml.jackson.databind.deser.impl.CreatorCandidate;
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+
+import frc.robot.Constants.CanIds;
+
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 public class hopperReal implements hopperIO {
-    private final SparkMax storage = new SparkMax(1,MotorType.kBrushless);
+    private final SparkMax storage = new SparkMax(CanIds.Hopper,MotorType.kBrushless);
     private SparkBaseConfig storageConfig = new SparkMaxConfig();
 
 

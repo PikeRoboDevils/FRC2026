@@ -1,10 +1,13 @@
 package frc.robot.Subsystems.hopper;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.HopperConstants.*;
+
+import org.littletonrobotics.junction.Logger;
 
 
 public class hopper extends SubsystemBase{
@@ -24,7 +27,7 @@ public class hopper extends SubsystemBase{
     public void toSetpoint(double angle) {
         if (extendPid.atSetpoint()) {return;}
 
-        var speed = extendPid.calculate(inputs.position, angle);
+        var speed = MathUtil.clamp(extendPid.calculate(inputs.position, angle), -0.1,.1);
         run(speed);
     }
 
@@ -50,5 +53,11 @@ public class hopper extends SubsystemBase{
     }
     public void stop() {
     io.stop();
+    }
+
+    @Override
+    public void periodic() {
+        io.updateInputs(inputs);
+        Logger.recordOutput("wrist",inputs.position);
     }
 }

@@ -12,12 +12,18 @@ import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.Constants.KeyPoses;
 import frc.robot.Constants.Mode;
 import frc.robot.Subsystems.Vision;
 import frc.robot.Subsystems.Climber.Climber;
@@ -42,6 +48,8 @@ import frc.robot.util.DriveTo;
 import static frc.robot.Constants.KeyPoses.*;
 import static frc.robot.Constants.systems.*;
 
+import java.nio.file.OpenOption;
+
 public class RobotContainer {
   private CommandXboxController driver = new CommandXboxController(0);
   private CommandXboxController operater = new CommandXboxController(1);
@@ -60,7 +68,11 @@ public class RobotContainer {
 
   private Aim autoAim;
   private DriveTo autoDrive;
+  private Trigger nearBump;
+  private Trigger nearShoot;
 
+  private double currentShootVelocity = 1; 
+  
   public RobotContainer() {
     drive =
             new Drive(
@@ -115,6 +127,21 @@ public class RobotContainer {
     // Not working :)
     NamedCommands.registerCommand("RunIntake", intake.runAuto());
 
+    /* Automation Triggers */
+    
+    //
+    nearBump = new Trigger(()->
+    !driver.povDown().getAsBoolean() && // TRIGGER OVERIDE 
+    MathUtil.isNear(Units.inchesToMeters(182.11), drive.getPose().getX(), 0.75)
+     || // Or
+    MathUtil.isNear(Units.inchesToMeters(469), drive.getPose().getX(),0.75));
+
+    nearShoot = new Trigger(()->
+      !driver.povDown().getAsBoolean() && // TRIGGER OVERIDE 
+      //If pose is 1 meter away or on our side we will strt spining up
+      drive.getPose().getX() + 1 < LeftShootPose.getX()
+    );
+
 
   }
 
@@ -136,17 +163,31 @@ public class RobotContainer {
         driver.leftTrigger().whileTrue(intake.out());
 
 //HOPPER CONTROLS
-    operater.rightBumper().whileTrue(hopper.down());
-        operater.leftBumper().whileTrue(hopper.up());
+    // operater.rightBumper().whileTrue(hopper.down());
+    //     operater.leftBumper().whileTrue(hopper.up());
+    operater.rightTrigger().whileTrue(Commands.run(()->hopper.run(operater.getLeftY()/10),hopper));
 
 // SHOOTER CONTROLS 
-    operater.rightTrigger().whileTrue(shooter.runAt(10));
+    driver.rightBumper().whileTrue(shooter.runAt(currentShootVelocity));
+    
+    operater.povUp().onTrue(
+      Commands.runOnce(()->currentShootVelocity += 1)
+    );
+        operater.povDown().onTrue(
+      Commands.runOnce(()->currentShootVelocity -= 1)
+    );
 
 
 // CLIMBER CONTROLS 
     operater.povDown().whileTrue(climber.climb());
 
 // AUTOMATION
+
+// Auto turn near bump
+nearBump.whileTrue(autoAim.at(Math.toRadians(45), null, null));
+
+// Auto Spin-Up near shooting positions
+nearShoot.whileTrue(shooter.runAt(currentShootVelocity));
 
 // Aim at Hub
     driver.y().whileTrue(
@@ -166,6 +207,23 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     Logger.recordOutput("Auto Chosen", autoChooser.getSelected().getName());
-    return autoChooser.getSelected();
+    // return autoChooser.getSelected();
+    return testAuto();
   }
+
+  public Command testAuto() {
+    /* 
+     * Sets Pose to 0,0 
+     * then drives to 0,.33
+     * ~1 foot forwrd
+     * hopefully
+     */
+    return Commands
+    .runOnce(()->drive.setPose(
+        new Pose2d(0,0,new Rotation2d())
+      ),drive)
+    .andThen(autoDrive.generateCommand(new Pose2d(0,0.33,new Rotation2d())));
+  }
+
+  
 }

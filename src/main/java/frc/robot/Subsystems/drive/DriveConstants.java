@@ -55,10 +55,10 @@ public class DriveConstants {
 //   public static final Rotation2d backRightZeroRotation = new Rotation2d(0.2732941);
 
   /* 2026 Bot */
-  public static final Rotation2d frontLeftZeroRotation = new Rotation2d(0.49);
-  public static final Rotation2d frontRightZeroRotation = new Rotation2d(0.45);
-  public static final Rotation2d backLeftZeroRotation = new Rotation2d(0.776);
-  public static final Rotation2d backRightZeroRotation = new Rotation2d(0.9);
+  public static final Rotation2d frontLeftZeroRotation = new Rotation2d(3.09);
+  public static final Rotation2d frontRightZeroRotation = new Rotation2d(4.823);
+  public static final Rotation2d backLeftZeroRotation = new Rotation2d(1.443);
+  public static final Rotation2d backRightZeroRotation = new Rotation2d(0.618);
 
   // Device CAN IDs
   public static final int pigeonCanId = 11;
