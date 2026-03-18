@@ -23,8 +23,8 @@ public class hopperReal implements hopperIO {
 
     public hopperReal(){
     storageConfig
-        .smartCurrentLimit(40,60)
-        .idleMode(IdleMode.kCoast)
+        .smartCurrentLimit(60,60)
+        .idleMode(IdleMode.kBrake)
         .voltageCompensation(12); 
 
 

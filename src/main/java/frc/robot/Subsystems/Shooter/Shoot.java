@@ -11,7 +11,7 @@ import static frc.robot.Constants.ShooterConstants.*;
 public class Shoot extends SubsystemBase{
 
     private ShootIO io;
-    private ShootIOInputs inputs;
+    private ShootIOInputsAutoLogged inputs = new ShootIOInputsAutoLogged();
     private PIDController velocityPid = new PIDController(kP, 0, kD);
 
     public Shoot(ShootIO io) {
@@ -26,6 +26,15 @@ public class Shoot extends SubsystemBase{
         io.stop();
     }
 
+        
+    public void runTransfer(double speed){
+        io.runIndex(speed);
+    }
+
+    public void stopTransfer(){
+        io.stopIndex();
+    }
+
     public void toSetpoint(double setpoint){
         if (velocityPid.atSetpoint()) {return;}
 
@@ -36,5 +45,11 @@ public class Shoot extends SubsystemBase{
 
     public Command runAt(double velocity) {
         return Commands.run(()->toSetpoint(velocity));
+    }
+
+    
+    @Override
+    public void periodic() {
+        io.updateInputs(inputs);
     }
 }

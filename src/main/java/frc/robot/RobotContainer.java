@@ -29,6 +29,9 @@ import frc.robot.Subsystems.Vision;
 import frc.robot.Subsystems.Climber.Climber;
 import frc.robot.Subsystems.Climber.ClimberIO;
 import frc.robot.Subsystems.Climber.ClimberReal;
+import frc.robot.Subsystems.Indexer.IndexIO;
+import frc.robot.Subsystems.Indexer.IndexReal;
+import frc.robot.Subsystems.Indexer.Indexer;
 import frc.robot.Subsystems.Intake.Intake;
 import frc.robot.Subsystems.Intake.IntakeIO;
 import frc.robot.Subsystems.Intake.IntakeReal;
@@ -48,7 +51,6 @@ import frc.robot.util.DriveTo;
 import static frc.robot.Constants.KeyPoses.*;
 import static frc.robot.Constants.systems.*;
 
-import java.nio.file.OpenOption;
 
 public class RobotContainer {
   private CommandXboxController driver = new CommandXboxController(0);
@@ -62,6 +64,7 @@ public class RobotContainer {
 
 
   private Intake intake;
+    private Indexer indexer;
   private hopper hopper;
   private Shoot shooter;
   private Climber climber;
@@ -71,7 +74,7 @@ public class RobotContainer {
   private Trigger nearBump;
   private Trigger nearShoot;
 
-  private double currentShootVelocity = 1; 
+  private double currentShootVelocity = 1.0; 
   
   public RobotContainer() {
     drive =
@@ -95,6 +98,12 @@ public class RobotContainer {
         intake = new Intake(new IntakeIO() {});
       }
 
+      if (indexerEnabled) {
+        indexer = new Indexer(new IndexReal());
+      } else {
+        indexer = new Indexer(new IndexIO() {});
+      }
+
       if (hopperEnabled) {
         hopper = new hopper(new hopperReal());
       } else {
@@ -112,22 +121,12 @@ public class RobotContainer {
       } else {
         climber = new Climber(new ClimberIO() {});
       }
+    
 
       this.autoAim = new Aim(drive, AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded));
       this.autoDrive = new DriveTo(drive,AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded));
 
-
-    autoChooser = AutoBuilder.buildAutoChooser();
-    //SYS ID
-    autoChooser.addOption("SysID", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    autoChooser.addOption("SysIDQuasistatic", drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    SmartDashboard.putData("Auto Chooser",autoChooser);
-    configureBindings();
-
-    // Not working :)
-    NamedCommands.registerCommand("RunIntake", intake.runAuto());
-
-    /* Automation Triggers */
+       /* Automation Triggers */
     
     //
     nearBump = new Trigger(()->
@@ -141,6 +140,18 @@ public class RobotContainer {
       //If pose is 1 meter away or on our side we will strt spining up
       drive.getPose().getX() + 1 < LeftShootPose.getX()
     );
+
+    autoChooser = AutoBuilder.buildAutoChooser();
+    //SYS ID
+    autoChooser.addOption("SysID", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    autoChooser.addOption("SysIDQuasistatic", drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    SmartDashboard.putData("Auto Chooser",autoChooser);
+    configureBindings();
+
+    // Not working :)
+    NamedCommands.registerCommand("RunIntake", intake.runAuto());
+
+   
 
 
   }
@@ -159,35 +170,51 @@ public class RobotContainer {
 
 
 //INTAKE CONTROLS
+if (intakeEnabled) {
     driver.rightTrigger().whileTrue(intake.run());
         driver.leftTrigger().whileTrue(intake.out());
+      }
+
+
+// INDEXER CONTROLS
+if (indexerEnabled) {
+  operater.rightTrigger().whileTrue(indexer.runCommand(-0.5));
+}
 
 //HOPPER CONTROLS
-    // operater.rightBumper().whileTrue(hopper.down());
-    //     operater.leftBumper().whileTrue(hopper.up());
-    operater.rightTrigger().whileTrue(Commands.run(()->hopper.run(operater.getLeftY()/10),hopper));
+if (hopperEnabled) {
+    operater.rightBumper().whileTrue(hopper.down());
+        operater.leftBumper().whileTrue(hopper.up());
+    operater.leftTrigger().whileTrue(Commands.run(()->hopper.run(operater.getLeftY()/10),hopper));
+}
 
 // SHOOTER CONTROLS 
-    driver.rightBumper().whileTrue(shooter.runAt(currentShootVelocity));
-    
+if (shooterEnabled) {
+    driver.rightBumper().whileTrue(Commands.run(()->shooter.run(1), shooter));
+    driver.leftBumper().whileTrue(Commands.runEnd(()->shooter.runTransfer(-0.5),()->shooter.stopTransfer(), shooter));
+
     operater.povUp().onTrue(
       Commands.runOnce(()->currentShootVelocity += 1)
     );
         operater.povDown().onTrue(
+
       Commands.runOnce(()->currentShootVelocity -= 1)
     );
-
+}
 
 // CLIMBER CONTROLS 
+if (climberEnabled) {
     operater.povDown().whileTrue(climber.climb());
+}
 
 // AUTOMATION
-
+if (automation) {
 // Auto turn near bump
 nearBump.whileTrue(autoAim.at(Math.toRadians(45), null, null));
 
 // Auto Spin-Up near shooting positions
 nearShoot.whileTrue(shooter.runAt(currentShootVelocity));
+}
 
 // Aim at Hub
     driver.y().whileTrue(
@@ -196,12 +223,12 @@ nearShoot.whileTrue(shooter.runAt(currentShootVelocity));
             () -> -driver.getLeftX()));
 
   // Drive to Shooting positions
-    driver.rightBumper().whileTrue(
-      autoDrive.generateCommand(
-         RightShootPose));
+    // driver.rightBumper().whileTrue(
+    //   autoDrive.generateCommand(
+    //      RightShootPose));
 
-    driver.leftBumper().whileTrue(
-      autoDrive.generateCommand(LeftShootPose));
+    // driver.leftBumper().whileTrue(
+    //   autoDrive.generateCommand(LeftShootPose));
 
   }
 

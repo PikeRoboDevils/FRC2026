@@ -45,18 +45,26 @@ public final class Constants {
 
   public class systems{
     public static final boolean hopperEnabled = true;
-    public static final boolean intakeEnabled = false;
+    public static final boolean intakeEnabled = true;
+    public static final boolean indexerEnabled = true;
     public static final boolean climberEnabled = false;
-    public static final boolean shooterEnabled = false;
+    public static final boolean shooterEnabled = true;
+
+    public static final boolean automation = false;
   }
 
   public static class CanIds {
-    public static final int ClimbLead = 0;
-    public static final int ClimbFollower = 0;
+    public static final int ClimbLead = 10;
+    public static final int ClimbFollower = 20;
     public static final int Hopper = 15;
-    public static final int Intake = 0;
-    public static final int ShooterLead = 0;
-    public static final int ShooterFollower = 0;
+    public static final int Intake = 19;
+    public static final int Indexer = 17;
+    public static final int ShootIndexer = 13;
+    public static final int ShooterLead = 12;
+    public static final int ShooterF1 = 14;
+    public static final int ShooterF2 = 16;
+    public static final int ShooterF3 = 18;
+
     
   }
 
