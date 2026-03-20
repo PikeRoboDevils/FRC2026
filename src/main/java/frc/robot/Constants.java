@@ -50,6 +50,7 @@ public final class Constants {
     public static final boolean climberEnabled = false;
     public static final boolean shooterEnabled = true;
 
+        public static final boolean visionEnabled = false;
     public static final boolean automation = false;
   }
 
@@ -89,7 +90,7 @@ public final class Constants {
     public static final double kP = 1;
     public static final double kD = 0;
 
-    public static final double velocityConversionFactor = 1;
+    public static final double velocityConversionFactor = 15/11;
     
   } 
 

@@ -20,7 +20,7 @@ public IntakeReal(){
     
     lMotorConfig
         .smartCurrentLimit(40,60)
-        .idleMode(IdleMode.kCoast)
+        .idleMode(IdleMode.kBrake)
         .voltageCompensation(12)
         .inverted(true);   
 

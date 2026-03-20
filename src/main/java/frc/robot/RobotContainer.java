@@ -59,9 +59,6 @@ public class RobotContainer {
 
   private final SendableChooser<Command> autoChooser;
   private final Drive drive;
-  @SuppressWarnings("unused")
-  private final Vision vision;
-
 
   private Intake intake;
     private Indexer indexer;
@@ -74,7 +71,7 @@ public class RobotContainer {
   private Trigger nearBump;
   private Trigger nearShoot;
 
-  private double currentShootVelocity = 1.0; 
+
   
   public RobotContainer() {
     drive =
@@ -84,10 +81,10 @@ public class RobotContainer {
                 new ModuleIOSpark(1),
                 new ModuleIOSpark(2),
                 new ModuleIOSpark(3));
-
-    vision = 
+if(visionEnabled){
+    Vision vision = 
       new Vision(drive::addVisionMeasurement);
-
+} 
       // Setup for new programmers
       if (Constants.currentMode == Mode.SIM){}
 
@@ -172,6 +169,8 @@ public class RobotContainer {
 //INTAKE CONTROLS
 if (intakeEnabled) {
     driver.rightTrigger().whileTrue(intake.run());
+        // operater.rightTrigger().whileTrue(intake.run());
+
         driver.leftTrigger().whileTrue(intake.out());
       }
 
@@ -179,26 +178,35 @@ if (intakeEnabled) {
 // INDEXER CONTROLS
 if (indexerEnabled) {
   operater.rightTrigger().whileTrue(indexer.runCommand(-0.5));
+    operater.b().whileTrue(indexer.runCommand(0.5));
 }
 
 //HOPPER CONTROLS
 if (hopperEnabled) {
-    operater.rightBumper().whileTrue(hopper.down());
-        operater.leftBumper().whileTrue(hopper.up());
-    operater.leftTrigger().whileTrue(Commands.run(()->hopper.run(operater.getLeftY()/10),hopper));
+    // operater.rightBumper().whileTrue(hopper.down());
+        // operater.leftBumper().whileTrue(hopper.up());
+    // operater.leftTrigger().whileTrue();
+    hopper.setDefaultCommand(Commands.run(()->hopper.run(operater.getLeftY()/2),hopper));
 }
 
 // SHOOTER CONTROLS 
 if (shooterEnabled) {
-    driver.rightBumper().whileTrue(Commands.run(()->shooter.run(1), shooter));
-    driver.leftBumper().whileTrue(Commands.runEnd(()->shooter.runTransfer(-0.5),()->shooter.stopTransfer(), shooter));
+    driver.rightBumper().onTrue(Commands.run(()->shooter.run(shooter.currentShootVelocity), shooter));
+    driver.rightBumper().onFalse(Commands.run(()-> shooter.stop(), shooter));
 
-    operater.povUp().onTrue(
-      Commands.runOnce(()->currentShootVelocity += 1)
+    driver.povDown().onTrue(Commands.run(()->shooter.run(0.7), shooter));
+ driver.povDown().onFalse(Commands.run(()-> shooter.stop(), shooter));
+
+    operater.leftBumper().onTrue(Commands.run(()->shooter.runTransfer(-0.5), shooter));
+      operater.leftBumper().onFalse(Commands.run(()->shooter.stop(), shooter));
+
+    operater.povUp().whileTrue(Commands.runEnd(()->shooter.runTransfer(0.5),()->shooter.stopTransfer(), shooter));
+
+    operater.povLeft().onTrue(
+      Commands.runOnce(()->shooter.currentShootVelocity += 0.05)
     );
-        operater.povDown().onTrue(
-
-      Commands.runOnce(()->currentShootVelocity -= 1)
+        operater.povRight().onTrue(
+      Commands.runOnce(()->shooter.currentShootVelocity -= 0.05)
     );
 }
 
@@ -213,7 +221,7 @@ if (automation) {
 nearBump.whileTrue(autoAim.at(Math.toRadians(45), null, null));
 
 // Auto Spin-Up near shooting positions
-nearShoot.whileTrue(shooter.runAt(currentShootVelocity));
+nearShoot.whileTrue(shooter.runAt(shooter.currentShootVelocity));
 }
 
 // Aim at Hub
@@ -234,8 +242,8 @@ nearShoot.whileTrue(shooter.runAt(currentShootVelocity));
 
   public Command getAutonomousCommand() {
     Logger.recordOutput("Auto Chosen", autoChooser.getSelected().getName());
-    // return autoChooser.getSelected();
-    return testAuto();
+    return autoChooser.getSelected();
+    // return testAuto();
   }
 
   public Command testAuto() {
@@ -247,10 +255,12 @@ nearShoot.whileTrue(shooter.runAt(currentShootVelocity));
      */
     return Commands
     .runOnce(()->drive.setPose(
-        new Pose2d(0,0,new Rotation2d())
+        new Pose2d(0,0,new Rotation2d(0))
       ),drive)
-    .andThen(autoDrive.generateCommand(new Pose2d(0,0.33,new Rotation2d())));
+    .andThen(autoDrive.generateCommand(new Pose2d(0,1,new Rotation2d(0))));
   }
+
+  
 
   
 }

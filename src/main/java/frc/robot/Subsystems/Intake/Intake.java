@@ -17,7 +17,7 @@ public void periodic() {
     io.updateInputs(inputs);
 }
 public Command run() {
-    return Commands.runEnd(()->run(0.75), ()->stop());
+    return Commands.runEnd(()->run(1), ()->stop());
 }
 public Command runAuto() {
     return Commands.run(()->run(0.75));

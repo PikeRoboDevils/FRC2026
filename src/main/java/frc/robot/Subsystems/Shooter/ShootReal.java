@@ -21,30 +21,30 @@ private final SparkMax m_F3 = new SparkMax(CanIds.ShooterF3,MotorType.kBrushless
 
 private final SparkMax Indexer = new SparkMax(CanIds.ShootIndexer,MotorType.kBrushless);
 
-private SparkBaseConfig lMotorConfig = new SparkMaxConfig();
-private SparkBaseConfig fMotorConfig;
+private SparkBaseConfig MotorConfig = new SparkMaxConfig();
 
 public ShootReal(){
     
-    lMotorConfig
+    MotorConfig
         .smartCurrentLimit(40,60)
         .idleMode(IdleMode.kCoast)
         .voltageCompensation(12);   
 
-    // Followers follow
-    fMotorConfig = lMotorConfig.follow(Lead);
 
-    Lead.configure(lMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    m_F1.configure(fMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+        // These should all be no Persist because it is very annoying to reset once you mess up
+
+    Lead.configure(MotorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
+    m_F1.configure(MotorConfig.follow(Lead,false), ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
 
     // F2 AND F3 ARE INVERTED 
-    m_F2.configure(fMotorConfig.inverted(true), ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    m_F3.configure(fMotorConfig.inverted(true), ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    m_F2.configure(MotorConfig.follow(Lead,true), ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
+    m_F3.configure(MotorConfig.follow(Lead,true), ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
 }
 
     @Override
     public void updateInputs(ShootIOInputs inputs) {
-        inputs.velocity = velocityConversionFactor * (Lead.getEncoder().getVelocity() + m_F2.getEncoder().getVelocity())/2;
+        inputs.velocity = velocityConversionFactor * Lead.getEncoder().getVelocity();
     }
 
     @Override
@@ -70,9 +70,9 @@ public ShootReal(){
     @Override
     public void stop() {
         Lead.stopMotor();
-        m_F1.stopMotor();
-        m_F2.stopMotor();
-        m_F3.stopMotor();
+        // m_F1.stopMotor();
+        // m_F2.stopMotor();
+        // m_F3.stopMotor();
     }
 
 }
