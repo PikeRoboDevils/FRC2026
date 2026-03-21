@@ -1,12 +1,12 @@
 package frc.robot.Subsystems.Shooter;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.BangBangController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Subsystems.Shooter.ShootIO.ShootIOInputs;
-import static frc.robot.Constants.ShooterConstants.*;
+
 
 import org.littletonrobotics.junction.Logger;
 
@@ -14,7 +14,7 @@ public class Shoot extends SubsystemBase{
 
     private ShootIO io;
     private ShootIOInputsAutoLogged inputs = new ShootIOInputsAutoLogged();
-    private PIDController velocityPid = new PIDController(kP, 0, kD);
+    private BangBangController bangControl = new BangBangController();
 
       public double currentShootVelocity = 0.1; 
 
@@ -39,16 +39,12 @@ public class Shoot extends SubsystemBase{
         io.stopIndex();
     }
 
-    public void toSetpoint(double setpoint){
-        // if (velocityPid.atSetpoint()) {return;}
-
-        var output = velocityPid.calculate(inputs.velocity, setpoint);
-        io.run(MathUtil.clamp(output, 0.1, 1));
-
-    }
 
     public Command runAt(double velocity) {
-        return Commands.run(()->toSetpoint(velocity))
+        return Commands.run(
+        ()->run(
+            bangControl.calculate(inputs.velocity, velocity))
+            )
         .finallyDo(()->stop());
     }
 
