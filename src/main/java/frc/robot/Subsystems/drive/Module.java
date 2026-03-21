@@ -68,7 +68,7 @@ public class Module {
     state.optimize(getAngle());
 
     //CAUSING THE DRIFT!!!!
-    // state.cosineScale(inputs.turnPosition);
+    state.cosineScale(inputs.turnPosition);
 
     // Apply setpoints
     io.setDriveVelocity(state.speedMetersPerSecond / wheelRadiusMeters);

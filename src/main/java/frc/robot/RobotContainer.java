@@ -208,8 +208,12 @@ if (hopperEnabled) {
 
 // SHOOTER CONTROLS 
 if (shooterEnabled) {
-    driver.rightBumper().onTrue(Commands.run(()->shooter.run(shooter.currentShootVelocity), shooter));
-    driver.rightBumper().onFalse(Commands.run(()-> shooter.stop(), shooter));
+    // driver.rightBumper().onTrue(Commands.run(()->shooter.run(shooter.currentShootVelocity), shooter));
+    // driver.rightBumper().onFalse(Commands.run(()-> shooter.stop(), shooter));
+
+    driver.rightBumper().whileTrue(shooter.runAt(1));
+    // driver.rightBumper().onFalse(shooter.stop());
+
 
     driver.povDown().onTrue(Commands.run(()->shooter.run(0.7), shooter));
  driver.povDown().onFalse(Commands.run(()-> shooter.stop(), shooter));
