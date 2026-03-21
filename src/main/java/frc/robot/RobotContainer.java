@@ -86,7 +86,9 @@ if(visionEnabled){
       new Vision(drive::addVisionMeasurement);
 } 
       // Setup for new programmers
-      if (Constants.currentMode == Mode.SIM){}
+      if (Constants.currentMode == Mode.SIM){
+
+      }
 
       // Select Subsystems
       if (intakeEnabled) {
@@ -142,6 +144,12 @@ if(visionEnabled){
     //SYS ID
     autoChooser.addOption("SysID", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
     autoChooser.addOption("SysIDQuasistatic", drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+
+    // Manual Autos/ NON-PATHPLANNER
+    autoChooser.addOption("test", testAuto());
+    autoChooser.addOption("JUST-SHOOT",shootAuto());
+    autoChooser.addOption("coin toss", maybeAuto());
+
     SmartDashboard.putData("Auto Chooser",autoChooser);
     configureBindings();
 
@@ -166,7 +174,7 @@ if(visionEnabled){
             driver.b().onTrue(Commands.runOnce(()->drive.resetGyro(0), drive));
             driver.x().whileTrue(Commands.run(()->drive.stopWithX(), drive));
 
-            driver.leftBumper().onTrue(drive.defer(
+            driver.leftBumper().whileTrue(drive.defer(
               ()->
                 DriveCommands.joystickDrive(
                   drive,
@@ -193,9 +201,8 @@ if (indexerEnabled) {
 
 //HOPPER CONTROLS
 if (hopperEnabled) {
-    // operater.rightBumper().whileTrue(hopper.down());
-        // operater.leftBumper().whileTrue(hopper.up());
-    // operater.leftTrigger().whileTrue();
+    operater.leftTrigger().whileTrue(Commands.run(()->hopper.run(0.25),hopper));
+
     hopper.setDefaultCommand(Commands.run(()->hopper.run(operater.getLeftY()/4),hopper));
 }
 
@@ -207,17 +214,22 @@ if (shooterEnabled) {
     driver.povDown().onTrue(Commands.run(()->shooter.run(0.7), shooter));
  driver.povDown().onFalse(Commands.run(()-> shooter.stop(), shooter));
 
+     driver.povLeft().onTrue(Commands.run(()->shooter.run(0.67), shooter));
+ driver.povLeft().onFalse(Commands.run(()-> shooter.stop(), shooter));
+
+     driver.povUp().onTrue(Commands.run(()->shooter.run(0.6), shooter));
+ driver.povUp().onFalse(Commands.run(()-> shooter.stop(), shooter));
+
     operater.leftBumper().onTrue(Commands.run(()->shooter.runTransfer(-0.5), shooter));
       operater.leftBumper().onFalse(Commands.run(()->shooter.stopTransfer(), shooter));
 
     operater.povUp().whileTrue(Commands.runEnd(()->shooter.runTransfer(0.5),()->shooter.stopTransfer(), shooter));
 
     operater.povLeft().onTrue(
-      Commands.runOnce(()->shooter.currentShootVelocity += 0.05)
-    );
-        operater.povRight().onTrue(
-      Commands.runOnce(()->shooter.currentShootVelocity -= 0.05)
-    );
+      Commands.runOnce(()->shooter.currentShootVelocity += 0.05));
+    operater.povRight().onTrue(
+      Commands.runOnce(()->shooter.currentShootVelocity -= 0.05));
+
 }
 
 // CLIMBER CONTROLS 
@@ -227,11 +239,11 @@ if (climberEnabled) {
 
 // AUTOMATION
 if (automation) {
-// Auto turn near bump
-nearBump.whileTrue(autoAim.at(Math.toRadians(45), null, null));
+// // Auto turn near bump
+// nearBump.whileTrue(autoAim.at(Math.toRadians(45),()-> driver.getLeftX(), ()->driver.getLeftY()));
 
 // Auto Spin-Up near shooting positions
-nearShoot.whileTrue(shooter.runAt(shooter.currentShootVelocity));
+nearShoot.whileTrue(Commands.run(()->shooter.run(0.5),shooter));
 }
 
 // Aim at Hub
@@ -239,6 +251,15 @@ nearShoot.whileTrue(shooter.runAt(shooter.currentShootVelocity));
       autoAim.at(HubPose,
             () -> -driver.getLeftY(),
             () -> -driver.getLeftX()));
+
+// drive at angle 
+    driver.a().whileTrue(
+      drive.defer(
+        ()->DriveCommands.joystickDriveAtAngle(drive,
+        ()->-driver.getLeftY(),
+        ()->-driver.getLeftX(),
+        ()->new Rotation2d(45)))
+      );
 
   // Drive to Shooting positions
     // driver.rightBumper().whileTrue(
@@ -253,10 +274,10 @@ nearShoot.whileTrue(shooter.runAt(shooter.currentShootVelocity));
   public Command getAutonomousCommand() {
     Logger.recordOutput("Auto Chosen", autoChooser.getSelected().getName());
     return autoChooser.getSelected();
-    // return testAuto();
+    
   }
 
-  public Command testAuto() {
+  private Command testAuto() {
     /* 
      * Sets Pose to 0,0 
      * then drives to 0,.33
@@ -267,10 +288,24 @@ nearShoot.whileTrue(shooter.runAt(shooter.currentShootVelocity));
     .runOnce(()->drive.setPose(
         new Pose2d(0,0,new Rotation2d(0))
       ),drive)
-    .andThen(autoDrive.generateCommand(new Pose2d(0,1,new Rotation2d(0))));
+    .andThen(autoDrive.generateCommand(new Pose2d(0,-1,new Rotation2d(0))));
   }
 
-  
+  private Command shootAuto() {
+    return Commands.run(()->shooter.run(0.7),shooter).alongWith(
+      Commands.waitSeconds(0.2).andThen(()->shooter.runTransfer(-0.5))
+    );
+  }
 
+  private Command maybeAuto() {
+    return 
+      autoDrive.generateCommand(new Pose2d(0,-0.5,new Rotation2d()))
+    .andThen(
+      autoDrive.generateCommand(new Pose2d(-2,-0.5,new Rotation2d())))
+    .andThen(
+        shootAuto());
+  }
+
+
+  }
   
-}
