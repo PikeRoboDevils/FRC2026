@@ -164,7 +164,17 @@ if(visionEnabled){
 
             //RESET GYRO
             driver.b().onTrue(Commands.runOnce(()->drive.resetGyro(0), drive));
+            driver.x().whileTrue(Commands.run(()->drive.stopWithX(), drive));
 
+            driver.leftBumper().onTrue(drive.defer(
+              ()->
+                DriveCommands.joystickDrive(
+                  drive,
+                    () -> -0.25*driver.getLeftY(),
+                    () -> -0.25*driver.getLeftX(),
+                    () -> 0.25*driver.getRightX())
+            ));
+            
 
 //INTAKE CONTROLS
 if (intakeEnabled) {
@@ -186,7 +196,7 @@ if (hopperEnabled) {
     // operater.rightBumper().whileTrue(hopper.down());
         // operater.leftBumper().whileTrue(hopper.up());
     // operater.leftTrigger().whileTrue();
-    hopper.setDefaultCommand(Commands.run(()->hopper.run(operater.getLeftY()/2),hopper));
+    hopper.setDefaultCommand(Commands.run(()->hopper.run(operater.getLeftY()/4),hopper));
 }
 
 // SHOOTER CONTROLS 
@@ -198,7 +208,7 @@ if (shooterEnabled) {
  driver.povDown().onFalse(Commands.run(()-> shooter.stop(), shooter));
 
     operater.leftBumper().onTrue(Commands.run(()->shooter.runTransfer(-0.5), shooter));
-      operater.leftBumper().onFalse(Commands.run(()->shooter.stop(), shooter));
+      operater.leftBumper().onFalse(Commands.run(()->shooter.stopTransfer(), shooter));
 
     operater.povUp().whileTrue(Commands.runEnd(()->shooter.runTransfer(0.5),()->shooter.stopTransfer(), shooter));
 
