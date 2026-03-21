@@ -293,7 +293,7 @@ nearShoot.whileTrue(Commands.run(()->shooter.run(0.5),shooter));
 
   private Command shootAuto() {
     return Commands.run(()->shooter.run(0.7),shooter).alongWith(
-      Commands.waitSeconds(0.2).andThen(()->shooter.runTransfer(-0.5))
+      Commands.waitSeconds(3).andThen(()->shooter.runTransfer(-0.5))
     );
   }
 
