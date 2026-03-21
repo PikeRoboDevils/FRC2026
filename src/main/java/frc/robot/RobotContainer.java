@@ -195,14 +195,14 @@ if (intakeEnabled) {
 
 // INDEXER CONTROLS
 if (indexerEnabled) {
-  operater.rightTrigger().whileTrue(indexer.runCommand(-0.5));
-    operater.b().whileTrue(indexer.runCommand(0.5));
+  // operater.rightTrigger().whileTrue(indexer.runCommand(-0.5));
+    // operater.b().whileTrue(indexer.runCommand(0.5));
 }
 
 //HOPPER CONTROLS
 if (hopperEnabled) {
     operater.leftTrigger().whileTrue(Commands.run(()->hopper.run(0.25),hopper));
-
+    operater.rightTrigger().whileTrue(Commands.run(()->hopper.run(-0.25),hopper));
     hopper.setDefaultCommand(Commands.run(()->hopper.run(operater.getLeftY()/4),hopper));
 }
 
