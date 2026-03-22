@@ -211,7 +211,7 @@ if (shooterEnabled) {
     // driver.rightBumper().onTrue(Commands.run(()->shooter.run(shooter.currentShootVelocity), shooter));
     // driver.rightBumper().onFalse(Commands.run(()-> shooter.stop(), shooter));
 
-    driver.rightBumper().whileTrue(shooter.runAt(1));
+    driver.rightBumper().whileTrue(shooter.runAt(3600));
     // driver.rightBumper().onFalse(shooter.stop());
 
 
