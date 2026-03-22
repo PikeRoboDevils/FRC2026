@@ -86,7 +86,7 @@ public class SparkOdometryThread {
 
   /** Returns a new queue that returns timestamp values for each sample. */
   public Queue<Double> makeTimestampQueue() {
-    Queue<Double> queue = new ArrayBlockingQueue<>(20);
+    Queue<Double> queue = new ArrayBlockingQueue<>(10); //CHANGED
     Drive.odometryLock.lock();
     try {
       timestampQueues.add(queue);
