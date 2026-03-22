@@ -52,10 +52,9 @@ public class Shoot extends SubsystemBase {
      * Runs at the set velocity 
      * velocity is set with setVelocity()
      */
-    public Command run() {
-        return Commands.run(
-                () -> run(currentShootvoltage),this).alongWith(runTransferCommand(-0.5))
-                .finallyDo(() -> stop());
+    public void run() {
+         run(currentShootvoltage);
+         runTransfer(-0.5);
     }
 
     public void setVelocity(double voltage){
