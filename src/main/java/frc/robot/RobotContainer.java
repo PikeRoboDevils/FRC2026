@@ -208,26 +208,22 @@ if (hopperEnabled) {
 
 // SHOOTER CONTROLS 
 if (shooterEnabled) {
-    // driver.rightBumper().onTrue(Commands.run(()->shooter.run(shooter.currentShootVelocity), shooter));
-    // driver.rightBumper().onFalse(Commands.run(()-> shooter.stop(), shooter));
 
-    // driver.rightBumper().onTrue(shooter.runAt(3600));
-    // driver.rightBumper().onFalse(shooter.stopCommand());
+  shooter.setDefaultCommand(shooter.run());
 
-
-    driver.povDown().onTrue(shooter.runAt(3600));
- driver.povDown().onFalse(Commands.runOnce(()->shooter.stop(), shooter));
+    // driver.rightBumper().
 
 
-    operater.leftBumper().onTrue(Commands.run(()->shooter.runTransfer(-0.5), shooter));
-      operater.leftBumper().onFalse(Commands.run(()->shooter.stopTransfer(), shooter));
+    driver.povDown().whileTrue(shooter.runAt(0.7));
+//  driver.povDown().onFalse(Commands.runOnce(()->shooter.stop(), shooter));
 
-    operater.povUp().whileTrue(Commands.runEnd(()->shooter.runTransfer(0.5),()->shooter.stopTransfer(), shooter));
 
-    operater.povLeft().onTrue(
-      Commands.runOnce(()->shooter.currentShootVelocity += 0.05));
-    operater.povRight().onTrue(
-      Commands.runOnce(()->shooter.currentShootVelocity -= 0.05));
+    // operater.povUp().whileTrue(Commands.runEnd(()->shooter.runTransfer(0.5),()->shooter.stopTransfer(), shooter));
+
+    // operater.povLeft().onTrue(
+    //   Commands.runOnce(()->shooter.currentShootVelocity += 0.05));
+    // operater.povRight().onTrue(
+    //   Commands.runOnce(()->shooter.currentShootVelocity -= 0.05));
 
 }
 
@@ -242,7 +238,7 @@ if (automation) {
 // nearBump.whileTrue(autoAim.at(Math.toRadians(45),()-> driver.getLeftX(), ()->driver.getLeftY()));
 
 // Auto Spin-Up near shooting positions
-nearShoot.whileTrue(Commands.run(()->shooter.run(0.5),shooter));
+// nearShoot.whileTrue(Commands.run(()->shooter.run(0.5),shooter));
 }
 
 // Aim at Hub
@@ -290,11 +286,21 @@ nearShoot.whileTrue(Commands.run(()->shooter.run(0.5),shooter));
     .andThen(autoDrive.generateCommand(new Pose2d(0,-1,new Rotation2d(0))));
   }
 
-  private Command shootAuto() {
-    return Commands.run(()->shooter.run(0.7),shooter).alongWith(
-      Commands.waitSeconds(3).andThen(()->shooter.runTransfer(-0.5))
+  // private Command shootAuto() {
+  //   return Commands.run(()->shooter.run(0.7),shooter).alongWith(
+  //     Commands.waitSeconds(3).andThen(()->shooter.runTransfer(-0.5))
+  //   );
+  // }
+
+    private Command shootAuto() {
+    return Commands.run(
+        ()->shooter.setVelocity(0.7),shooter)
+      .finallyDo(
+        ()->shooter.setVelocity(0.2)
     );
   }
+
+
 
   private Command maybeAuto() {
     return 

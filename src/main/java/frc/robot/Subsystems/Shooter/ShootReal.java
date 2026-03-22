@@ -45,6 +45,7 @@ public ShootReal(){
     @Override
     public void updateInputs(ShootIOInputs inputs) {
         inputs.velocity = velocityConversionFactor * Lead.getEncoder().getVelocity();
+        inputs.appliedOutput = Lead.getAppliedOutput();
     }
 
     @Override

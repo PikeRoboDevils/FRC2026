@@ -87,9 +87,10 @@ public final class Constants {
   }
 
   public static class ShooterConstants {
-
     public static final double velocityConversionFactor = 15/11;
-    
+    public static final double kTOWERVELOCITY = 3600;
+    public static final double kHUBVELOCITY = 4000;
+    public static final double kV = 0.1;    
   } 
 
   public class KeyPoses{
