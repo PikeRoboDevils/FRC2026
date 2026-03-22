@@ -209,7 +209,7 @@ if (hopperEnabled) {
 // SHOOTER CONTROLS 
 if (shooterEnabled) {
 
-  shooter.setDefaultCommand(shooter.run());
+  shooter.setDefaultCommand(Commands.run(()->shooter.run(),shooter));
 
     // driver.rightBumper().
 
