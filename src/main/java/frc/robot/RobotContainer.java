@@ -214,8 +214,8 @@ if (shooterEnabled) {
     // driver.rightBumper().
 
 
-    driver.povDown().onTrue(Commands.run(()->shooter.setVelocity(0.7)));
-//  driver.povDown().onFalse(Commands.runOnce(()->shooter.stop(), shooter));
+    driver.povDown().whileTrue(Commands.run(()->shooter.setVelocity(0.7)));
+ driver.povDown().whileFalse(Commands.runOnce(()->shooter.setVelocity(0.2), shooter));
 
 
     // operater.povUp().whileTrue(Commands.runEnd(()->shooter.runTransfer(0.5),()->shooter.stopTransfer(), shooter));

@@ -12,7 +12,7 @@ public class Shoot extends SubsystemBase {
     private ShootIO io;
     private ShootIOInputsAutoLogged inputs = new ShootIOInputsAutoLogged();
 
-    public double currentShootvoltage = 0;
+    public double currentShootvoltage = 0.2;
 
     private double minShootVelocity = 3000;
 
