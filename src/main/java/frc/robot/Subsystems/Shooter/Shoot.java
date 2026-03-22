@@ -35,6 +35,8 @@ public class Shoot extends SubsystemBase {
     private void runTransfer(double speed) {
         if (inputs.velocity > minShootVelocity) {
             io.runIndex(speed);
+        } else {
+            io.runIndex(0);
         }
     }
 
