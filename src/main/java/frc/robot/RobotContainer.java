@@ -211,29 +211,28 @@ if (shooterEnabled) {
     // driver.rightBumper().onTrue(Commands.run(()->shooter.run(shooter.currentShootVelocity), shooter));
     // driver.rightBumper().onFalse(Commands.run(()-> shooter.stop(), shooter));
 
-    driver.rightBumper().onTrue(shooter.runAt(shooter.currentShootVelocity));
+    driver.rightBumper().onTrue(shooter.runAt(3600));
     driver.rightBumper().onFalse(shooter.stopCommand());
 
 
     driver.povDown().onTrue(shooter.runAt(3600));
  driver.povDown().onFalse(shooter.stopCommand());
 
-     driver.povLeft().onTrue(shooter.runAt(3300));
+     driver.povLeft().onTrue(shooter.runAt(300));
  driver.povLeft().onFalse(shooter.stopCommand());
 
-     driver.povUp().onTrue(Commands.run(()->shooter.run(0.7),shooter));
+     driver.povUp().onTrue(shooter.runAt(3000));
  driver.povUp().onFalse(shooter.stopCommand());
 
-    operater.leftBumper().onTrue(shooter.runTransferCommand(-0.5));
-      operater.leftBumper().onFalse(shooter.stopTransferCommand());
+    operater.leftBumper().onTrue(Commands.run(()->shooter.runTransfer(-0.5), shooter));
+      operater.leftBumper().onFalse(Commands.run(()->shooter.stopTransfer(), shooter));
 
-        operater.povUp().onTrue(shooter.runTransferCommand(0.5));
-      operater.povUp().onFalse(shooter.stopTransferCommand());
+    operater.povUp().whileTrue(Commands.runEnd(()->shooter.runTransfer(0.5),()->shooter.stopTransfer(), shooter));
 
     operater.povLeft().onTrue(
-      Commands.runOnce(()->shooter.currentShootVelocity += 100));
+      Commands.runOnce(()->shooter.currentShootVelocity += 0.05));
     operater.povRight().onTrue(
-      Commands.runOnce(()->shooter.currentShootVelocity -= 100));
+      Commands.runOnce(()->shooter.currentShootVelocity -= 0.05));
 
 }
 
