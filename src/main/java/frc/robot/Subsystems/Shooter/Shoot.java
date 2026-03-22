@@ -29,7 +29,7 @@ public class Shoot extends SubsystemBase {
     }
 
     public Command runTransferCommand(double speed) {
-        return Commands.run(() -> runTransfer(speed)).finallyDo(()->stopTransfer());
+        return Commands.run(() -> runTransfer(speed),this).finallyDo(()->stopTransfer());
     }
 
     private void runTransfer(double speed) {
@@ -54,7 +54,7 @@ public class Shoot extends SubsystemBase {
      */
     public Command run() {
         return Commands.run(
-                () -> run(currentShootvoltage)).alongWith(runTransferCommand(-0.5))
+                () -> run(currentShootvoltage),this).alongWith(runTransferCommand(-0.5))
                 .finallyDo(() -> stop());
     }
 
