@@ -37,6 +37,7 @@ public class Shoot extends SubsystemBase {
             io.runIndex(speed);
         } else {
             io.runIndex(0);
+            
         }
     }
 

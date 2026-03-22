@@ -220,10 +220,10 @@ if (shooterEnabled) {
 
     // operater.povUp().whileTrue(Commands.runEnd(()->shooter.runTransfer(0.5),()->shooter.stopTransfer(), shooter));
 
-    // operater.povLeft().onTrue(
-    //   Commands.runOnce(()->shooter.currentShootVelocity += 0.05));
-    // operater.povRight().onTrue(
-    //   Commands.runOnce(()->shooter.currentShootVelocity -= 0.05));
+    operater.povLeft().onTrue(
+      Commands.runOnce(()->shooter.currentShootvoltage += 0.05));
+    operater.povRight().onTrue(
+      Commands.runOnce(()->shooter.currentShootvoltage -= 0.05));
 
 }
 
