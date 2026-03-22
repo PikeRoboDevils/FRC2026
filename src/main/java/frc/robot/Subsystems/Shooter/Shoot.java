@@ -14,9 +14,9 @@ public class Shoot extends SubsystemBase{
 
     private ShootIO io;
     private ShootIOInputsAutoLogged inputs = new ShootIOInputsAutoLogged();
-    private BangBangController bangControl = new BangBangController(10);
+    private BangBangController bangControl = new BangBangController(1);
 
-      public double currentShootVelocity = 0.1; 
+      public double currentShootVelocity = 3000; 
 
     public Shoot(ShootIO io) {
         this.io = io;
@@ -31,8 +31,16 @@ public class Shoot extends SubsystemBase{
     }
 
         
+    public Command runTransferCommand(double speed){
+        return Commands.run(()->runTransfer(speed));
+    }
+
     public void runTransfer(double speed){
         io.runIndex(speed);
+    }
+
+    public Command stopTransferCommand(){
+        return Commands.run(()->stopTransfer());
     }
 
     public void stopTransfer(){
@@ -46,6 +54,10 @@ public class Shoot extends SubsystemBase{
             bangControl.calculate(inputs.velocity, velocity))
             )
         .finallyDo(()->stop());
+    }
+
+    public Command stopCommand() {
+        return Commands.run(()->stop());
     }
 
     
