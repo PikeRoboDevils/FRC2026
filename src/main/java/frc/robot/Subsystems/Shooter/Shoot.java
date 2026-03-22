@@ -14,7 +14,7 @@ public class Shoot extends SubsystemBase{
 
     private ShootIO io;
     private ShootIOInputsAutoLogged inputs = new ShootIOInputsAutoLogged();
-    private BangBangController bangControl = new BangBangController(100);
+    private BangBangController bangControl = new BangBangController(10);
 
       public double currentShootVelocity = 0.1; 
 
