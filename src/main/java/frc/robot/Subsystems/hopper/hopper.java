@@ -58,6 +58,6 @@ public class hopper extends SubsystemBase{
     @Override
     public void periodic() {
         io.updateInputs(inputs);
-        Logger.recordOutput("wrist",inputs.position);
+        Logger.processInputs(getName(), inputs);
     }
 }

@@ -134,7 +134,7 @@ public class DriveConstants {
       (2 * Math.PI) / 60.0 ; // RPM -> WHEEL Rad/Sec
 
   // Turn PID configuration
-  public static final double turnKp = 0.2;
+  public static final double turnKp = 0.4;
   public static final double turnKd = 0.0;
   public static final double turnSimP = 0.01;
   public static final double turnSimD = 0.0;

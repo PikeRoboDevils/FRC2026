@@ -152,6 +152,8 @@ public class Drive extends SubsystemBase {
     // Update odometry
     double[] sampleTimestamps =
         modules[0].getOdometryTimestamps(); // All signals are sampled together
+
+        //TODO: CHECK THIS LOOP AT HOME
     int sampleCount = sampleTimestamps.length;
     for (int i = 0; i < sampleCount; i++) {
       // Read wheel positions and deltas from each module

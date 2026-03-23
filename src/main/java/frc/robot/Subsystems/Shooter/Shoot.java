@@ -1,62 +1,76 @@
 package frc.robot.Subsystems.Shooter;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.BangBangController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Subsystems.Shooter.ShootIO.ShootIOInputs;
-import static frc.robot.Constants.ShooterConstants.*;
 
 import org.littletonrobotics.junction.Logger;
 
-public class Shoot extends SubsystemBase{
+public class Shoot extends SubsystemBase {
 
     private ShootIO io;
     private ShootIOInputsAutoLogged inputs = new ShootIOInputsAutoLogged();
-    private PIDController velocityPid = new PIDController(kP, 0, kD);
 
-      public double currentShootVelocity = 0.1; 
+    public double currentShootvoltage = 0.2;
+
+    private double minShootVelocity = 3000;
 
     public Shoot(ShootIO io) {
         this.io = io;
     }
-    
-    public void run(double speed){
+
+    private void run(double speed) {
         io.run(speed);
     }
 
-    public void stop(){
+    private void stop() {
         io.stop();
     }
 
-        
-    public void runTransfer(double speed){
-        io.runIndex(speed);
+    public Command runTransferCommand(double speed) {
+        return Commands.run(() -> runTransfer(speed),this).finallyDo(()->stopTransfer());
     }
 
-    public void stopTransfer(){
+    private void runTransfer(double speed) {
+        if (inputs.velocity > minShootVelocity) {
+            io.runIndex(speed);
+        } else {
+            io.runIndex(0);
+            
+        }
+    }
+
+    private void stopTransfer() {
         io.stopIndex();
     }
 
-    public void toSetpoint(double setpoint){
-        // if (velocityPid.atSetpoint()) {return;}
-
-        var output = velocityPid.calculate(inputs.velocity, setpoint);
-        io.run(MathUtil.clamp(output, 0.1, 1));
-
+    public Command runAt(double percent) {
+        return Commands.run(
+                () -> run(percent)).alongWith(runTransferCommand(-0.5))
+                .finallyDo(() -> stop());
     }
 
-    public Command runAt(double velocity) {
-        return Commands.run(()->toSetpoint(velocity))
-        .finallyDo(()->stop());
+    /**
+     * Runs at the set velocity 
+     * velocity is set with setVelocity()
+     */
+    public void run() {
+         run(currentShootvoltage);
+         runTransfer(-0.5);
     }
 
-    
+    public void setVelocity(double voltage){
+        currentShootvoltage = voltage;
+    }
+
+
     @Override
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("Shooter", inputs);
-        Logger.recordOutput("setVelocity", currentShootVelocity);
+        // Logger.recordOutput("setVelocity", currentShootVelocity);
+        Logger.recordOutput("setVoltage", currentShootvoltage);
+        
     }
 }
