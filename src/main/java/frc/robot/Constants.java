@@ -50,7 +50,7 @@ public final class Constants {
     public static final boolean climberEnabled = false;
     public static final boolean shooterEnabled = true;
 
-        public static final boolean visionEnabled = true;
+        public static final boolean visionEnabled = false;
     public static final boolean automation = false;
   }
 
@@ -116,7 +116,7 @@ public final class Constants {
 }
 
 
-/* Vision 2025 */
+/* Vision 2026 */
   public static class CameraConstants {
     // Cam 1 is roughly on top of the lower mount for elevator lokking in towards the reef tags.
     public static String CAM1N = "BackCAM";
