@@ -290,24 +290,33 @@ if (automation) {
     );
   }
 
+  //Doesnt work 
   //   private Command shootAuto() {
   //   return Commands.run(
   //       ()->shooter.setVelocity(0.7),shooter).andThen(()->shooter.run());
   // }
 
-  private Command LeftSide() {
-    return Commands.run(()->drive.setPose(new Pose2d( 3.482, 2.254,new Rotation2d(Units.degreesToRadians(45))) ),drive);
-  }
+  // Vision WILL make it obsolete
+  // private Command LeftSide() {
+  //   return Commands.run(()->drive.setPose(new Pose2d( 3.482, 2.254,new Rotation2d(Units.degreesToRadians(45))) ),drive);
+  // }
 
-  private Command RightSide() {
-        return Commands.run(()->drive.setPose(new Pose2d( 3.482, 5.525,new Rotation2d(Units.degreesToRadians(-45))) ),drive);
+  // private Command RightSide() {
+  //       return Commands.run(()->drive.setPose(new Pose2d( 3.482, 5.525,new Rotation2d(Units.degreesToRadians(-45))) ),drive);
 
-  }
+  // }
 
-
+/**
+ * Middle auto
+ * @return 
+ * A Command that will run during auto
+ */
   private Command maybeAuto() {
+    
+    //CHECK BEGINING ROTATION
     return 
-      autoDrive.generateCommand(new Pose2d(0,-0.5,new Rotation2d()))
+    Commands.run(()->drive.setPose(new Pose2d(0,0,new Rotation2d(Math.PI))),drive).andThen(
+      autoDrive.generateCommand(new Pose2d(0,0,new Rotation2d())))
     .andThen(
       autoDrive.generateCommand(new Pose2d(-2,-0.5,new Rotation2d())))
     .andThen(
