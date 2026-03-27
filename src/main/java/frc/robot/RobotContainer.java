@@ -286,7 +286,7 @@ if (automation) {
 
   private Command shootAuto() {
     return Commands.run(()->shooter.run(0.7),shooter).alongWith(
-      Commands.waitSeconds(3).andThen(()->shooter.runTransfer(-0.5)).alongWith(Commands.run(()->intake.run(),intake))
+      Commands.waitSeconds(3).andThen(()->shooter.runTransfer(-0.5))
     );
   }
 
