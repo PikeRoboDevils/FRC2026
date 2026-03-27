@@ -211,7 +211,6 @@ if (shooterEnabled) {
 
   shooter.setDefaultCommand(Commands.run(()->shooter.run(),shooter));
 
-    // driver.rightBumper().
 
 
     driver.povDown().whileTrue(Commands.run(()->shooter.setVelocity(0.8)));
@@ -224,7 +223,8 @@ if (shooterEnabled) {
       Commands.runOnce(()->shooter.currentShootvoltage += 0.05));
     operater.povRight().onTrue(
       Commands.runOnce(()->shooter.currentShootvoltage -= 0.05));
-
+        
+    operater.rightBumper().whileTrue(shooter.runTransferCommand(0.5));
 }
 
 // CLIMBER CONTROLS 
@@ -257,9 +257,9 @@ if (automation) {
       );
 
   // Drive to Shooting positions
-    // driver.rightBumper().whileTrue(
-    //   autoDrive.generateCommand(
-    //      RightShootPose));
+    driver.rightBumper().whileTrue(
+      autoDrive.generateCommand(
+         RightShootPose));
 
     // driver.leftBumper().whileTrue(
     //   autoDrive.generateCommand(LeftShootPose));

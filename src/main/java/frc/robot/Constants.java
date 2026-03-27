@@ -46,11 +46,11 @@ public final class Constants {
   public class systems{
     public static final boolean hopperEnabled = true;
     public static final boolean intakeEnabled = true;
-    public static final boolean indexerEnabled = true;
+    public static final boolean indexerEnabled = false;
     public static final boolean climberEnabled = false;
     public static final boolean shooterEnabled = true;
 
-        public static final boolean visionEnabled = false;
+        public static final boolean visionEnabled = true;
     public static final boolean automation = false;
   }
 
@@ -119,29 +119,29 @@ public final class Constants {
 /* Vision 2025 */
   public static class CameraConstants {
     // Cam 1 is roughly on top of the lower mount for elevator lokking in towards the reef tags.
-    public static String CAM1N = "LEFT_CAM";
+    public static String CAM1N = "BackCAM";
 
     public static Rotation3d CAM1R =
-        new Rotation3d(0, Units.degreesToRadians(25), Units.degreesToRadians(40));
+        new Rotation3d(Units.degreesToRadians(90), Units.degreesToRadians(0), Units.degreesToRadians(160));
 
     // transform of camera (dont forget forward+ left+ up+)
     public static Translation3d CAM1T =
         new Translation3d(
-            Units.inchesToMeters(-4), 
-            Units.inchesToMeters(13),
-            Units.inchesToMeters(8));
+            Units.inchesToMeters(-11.75), 
+            Units.inchesToMeters(-8),
+            Units.inchesToMeters(5.625));
 
-    public static String CAM2N = "RIGHT_CAM";
+    public static String CAM2N = "FrontCAM";
 
     public static Rotation3d CAM2R =
-        new Rotation3d(0, Units.degreesToRadians(25), Units.degreesToRadians(180));
+        new Rotation3d(Units.degreesToRadians(-90), 0, 0);
 
     // transform of camera (dont forget forward+ left+ up+)
     public static Translation3d CAM2T =
         new Translation3d(
-            Units.inchesToMeters(-4), 
-            Units.inchesToMeters(-13),
-            Units.inchesToMeters(8));
+            Units.inchesToMeters(-4.25), 
+            Units.inchesToMeters(8.5),
+            Units.inchesToMeters(21.5));
 
       // This PID isnt tuned
       public static PPHolonomicDriveController mDriveController =
