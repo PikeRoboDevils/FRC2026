@@ -163,8 +163,8 @@ if(visionEnabled){
       drive.setDefaultCommand(
         DriveCommands.joystickDrive(
             drive,
-            () -> -driver.getLeftY(),
-            () -> -driver.getLeftX(),
+            () -> driver.getLeftY(),
+            () -> driver.getLeftX(),
             () -> driver.getRightX()));
 
             //RESET GYRO
@@ -175,8 +175,8 @@ if(visionEnabled){
               ()->
                 DriveCommands.joystickDrive(
                   drive,
-                    () -> -0.5*driver.getLeftY(),
-                    () -> -0.5*driver.getLeftX(),
+                    () -> 0.5*driver.getLeftY(),
+                    () -> 0.5*driver.getLeftX(),
                     () -> 0.5*driver.getRightX())
             ));
             

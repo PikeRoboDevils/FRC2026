@@ -122,7 +122,7 @@ public final class Constants {
     public static String CAM1N = "BackCAM";
 
     public static Rotation3d CAM1R =
-        new Rotation3d(Units.degreesToRadians(90), Units.degreesToRadians(0), Units.degreesToRadians(160));
+        new Rotation3d(Units.degreesToRadians(90), Units.degreesToRadians(0), Units.degreesToRadians(130));
 
     // transform of camera (dont forget forward+ left+ up+)
     public static Translation3d CAM1T =
