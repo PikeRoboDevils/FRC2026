@@ -316,8 +316,6 @@ if (automation) {
     //CHECK BEGINING ROTATION
     return 
     Commands.run(()->drive.setPose(new Pose2d(0,0,new Rotation2d(Math.PI))),drive).andThen(
-      autoDrive.generateCommand(new Pose2d(0,0,new Rotation2d())))
-    .andThen(
       autoDrive.generateCommand(new Pose2d(-2,-0.5,new Rotation2d())))
     .andThen(
         shootAuto());
