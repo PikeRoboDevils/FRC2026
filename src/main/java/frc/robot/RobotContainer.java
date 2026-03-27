@@ -86,10 +86,6 @@ if(visionEnabled){
     vision = 
       new Vision(drive::addVisionMeasurement);
 }   
-      // Setup for new programmers
-      if (Constants.currentMode == Mode.SIM){
-
-      }
 
       // Select Subsystems
       if (intakeEnabled) {
