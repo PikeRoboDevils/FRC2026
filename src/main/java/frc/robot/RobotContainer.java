@@ -65,6 +65,7 @@ public class RobotContainer {
   private hopper hopper;
   private Shoot shooter;
   private Climber climber;
+  private Vision vision;
 
   private Aim autoAim;
   private DriveTo autoDrive;
@@ -82,9 +83,9 @@ public class RobotContainer {
                 new ModuleIOSpark(2),
                 new ModuleIOSpark(3));
 if(visionEnabled){
-    Vision vision = 
+    vision = 
       new Vision(drive::addVisionMeasurement);
-} 
+}   
       // Setup for new programmers
       if (Constants.currentMode == Mode.SIM){
 
@@ -199,6 +200,7 @@ if (indexerEnabled) {
     // operater.b().whileTrue(indexer.runCommand(0.5));
 }
 
+
 //HOPPER CONTROLS
 if (hopperEnabled) {
     operater.leftTrigger().whileTrue(Commands.run(()->hopper.run(0.25),hopper));
@@ -311,6 +313,7 @@ if (automation) {
         shootAuto());
   }
 
+  
 
   }
   

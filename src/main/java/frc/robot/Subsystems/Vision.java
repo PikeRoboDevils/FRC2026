@@ -96,6 +96,7 @@ public class Vision extends SubsystemBase{
   public void periodic() {
       // Logger.recordOutput("Vision/Field2d", field2d);
       updatePoseEstimation();
+            Logger.recordOutput("VisionPose", ReturnPhotonPose());
   }
 
   /**
@@ -128,13 +129,13 @@ public class Vision extends SubsystemBase{
       if (poseEst.isPresent()) {
         var pose = poseEst.get();
 
-        // if (filterPose(poseEst).isPresent()) {
+        if (filterPose(poseEst).isPresent()) {
 
           // Sends Pose to Drive Subsystem
           Logger.recordOutput("Vision/Pose",pose.estimatedPose.toPose2d());
           consumer.accept(
               pose.estimatedPose.toPose2d(), pose.timestampSeconds, getEstimationStdDevs(camera));
-        // }
+        }
       }
     }
   }
