@@ -84,7 +84,7 @@ public class RobotContainer {
                 new ModuleIOSpark(3));
 if(visionEnabled){
     vision = 
-      new Vision(drive::addVisionMeasurement);
+      new Vision(drive::addVisionMeasurement, ()->drive.getPose());
 }   
 
       // Select Subsystems
@@ -134,7 +134,7 @@ if(visionEnabled){
     nearShoot = new Trigger(()->
       !driver.povDown().getAsBoolean() && // TRIGGER OVERIDE 
       //If pose is 1 meter away or on our side we will strt spining up
-      drive.getPose().getX() + 1 < LeftShootPose.getX()
+      drive.getPose().getX() + 1 < ShootPose.getX()
     );
 
     autoChooser = AutoBuilder.buildAutoChooser();
@@ -163,8 +163,8 @@ if(visionEnabled){
       drive.setDefaultCommand(
         DriveCommands.joystickDrive(
             drive,
-            () -> -driver.getLeftY(),
-            () -> -driver.getLeftX(),
+            () -> driver.getLeftY(),
+            () -> driver.getLeftX(),
             () -> driver.getRightX()));
 
             //RESET GYRO
@@ -175,8 +175,8 @@ if(visionEnabled){
               ()->
                 DriveCommands.joystickDrive(
                   drive,
-                    () -> -0.5*driver.getLeftY(),
-                    () -> -0.5*driver.getLeftX(),
+                    () -> 0.5*driver.getLeftY(),
+                    () -> 0.5*driver.getLeftX(),
                     () -> 0.5*driver.getRightX())
             ));
             
@@ -257,7 +257,7 @@ if (automation) {
   // Drive to Shooting positions
     driver.rightBumper().whileTrue(
       autoDrive.generateCommand(
-         RightShootPose));
+         ShootPose));
 
     // driver.leftBumper().whileTrue(
     //   autoDrive.generateCommand(LeftShootPose));
