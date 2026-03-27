@@ -128,13 +128,13 @@ public class Vision extends SubsystemBase{
       if (poseEst.isPresent()) {
         var pose = poseEst.get();
 
-        if (filterPose(poseEst).isPresent()) {
+        // if (filterPose(poseEst).isPresent()) {
 
           // Sends Pose to Drive Subsystem
           Logger.recordOutput("Vision/Pose",pose.estimatedPose.toPose2d());
           consumer.accept(
               pose.estimatedPose.toPose2d(), pose.timestampSeconds, getEstimationStdDevs(camera));
-        }
+        // }
       }
     }
   }
@@ -377,7 +377,7 @@ public class Vision extends SubsystemBase{
         CameraConstants.CAM1R, // rotation of camera
         CameraConstants.CAM1T,
         VecBuilder.fill(n1StndardDevs, n2StandardDevs, n4StandardDevs),
-        VecBuilder.fill(n1StndardDevs * 0.5, n2StandardDevs * 0.5, n4StandardDevs * 0.5) // std devs
+        VecBuilder.fill(n1StndardDevs * 1, n2StandardDevs * 1, n4StandardDevs * 1) // std devs
         ),
 
     CAM_2(
@@ -385,7 +385,7 @@ public class Vision extends SubsystemBase{
         CameraConstants.CAM2R, // rotation of camera
         CameraConstants.CAM2T, // transform of camera (dont forget forwatd+ left+ up+)
         VecBuilder.fill(n1StndardDevs, n2StandardDevs, n4StandardDevs),
-        VecBuilder.fill(n1StndardDevs * 0.5, n2StandardDevs * 0.5, n4StandardDevs * 0.5) // std devs
+        VecBuilder.fill(n1StndardDevs * 1, n2StandardDevs * 1, n4StandardDevs * 1) // std devs
         ),
   // CAM_3(
   //   PoseCameraConstants.CAM3N,
