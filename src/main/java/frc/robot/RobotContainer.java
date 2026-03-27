@@ -292,10 +292,7 @@ if (automation) {
 
     private Command shootAuto() {
     return Commands.run(
-        ()->shooter.setVelocity(0.7),shooter)
-      .finallyDo(
-        ()->shooter.setVelocity(0.2)
-    );
+        ()->shooter.setVelocity(0.7),shooter).andThen(()->shooter.run());
   }
 
 
@@ -309,7 +306,9 @@ if (automation) {
         shootAuto());
   }
 
-  
+  public void teleopInit(){
+    shooter.setVelocity(.2);
+  }
 
   }
   

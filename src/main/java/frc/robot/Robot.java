@@ -138,6 +138,7 @@ public class Robot extends LoggedRobot {
     // this line or comment it out.
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
+      robotContainer.teleopInit();
     }
   }
 
