@@ -20,7 +20,7 @@ public class Shoot extends SubsystemBase {
         this.io = io;
     }
 
-    private void run(double speed) {
+    public void run(double speed) {
         io.run(speed);
     }
 

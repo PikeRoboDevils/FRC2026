@@ -284,16 +284,16 @@ if (automation) {
     .andThen(autoDrive.generateCommand(new Pose2d(0,-1,new Rotation2d(0))));
   }
 
-  // private Command shootAuto() {
-  //   return Commands.run(()->shooter.run(0.7),shooter).alongWith(
-  //     Commands.waitSeconds(3).andThen(()->shooter.runTransfer(-0.5))
-  //   );
-  // }
-
-    private Command shootAuto() {
-    return Commands.run(
-        ()->shooter.setVelocity(0.7),shooter).andThen(()->shooter.run());
+  private Command shootAuto() {
+    return Commands.run(()->shooter.run(0.7),shooter).alongWith(
+      Commands.waitSeconds(3).andThen(()->shooter.runTransfer(-0.5))
+    );
   }
+
+  //   private Command shootAuto() {
+  //   return Commands.run(
+  //       ()->shooter.setVelocity(0.7),shooter).andThen(()->shooter.run());
+  // }
 
   private Command LeftSide() {
     return Commands.run(()->drive.setPose(new Pose2d( 3.482, 2.254,new Rotation2d(Units.degreesToRadians(45))) ),drive);
