@@ -377,7 +377,7 @@ public class Vision extends SubsystemBase{
         CameraConstants.CAM1R, // rotation of camera
         CameraConstants.CAM1T,
         VecBuilder.fill(n1StndardDevs, n2StandardDevs, n4StandardDevs),
-        VecBuilder.fill(n1StndardDevs * 0, n2StandardDevs * 0, n4StandardDevs * 0) // std devs
+        VecBuilder.fill(n1StndardDevs * 0.5, n2StandardDevs * 0.5, n4StandardDevs * 0.5) // std devs
         ),
 
     CAM_2(
@@ -385,7 +385,7 @@ public class Vision extends SubsystemBase{
         CameraConstants.CAM2R, // rotation of camera
         CameraConstants.CAM2T, // transform of camera (dont forget forwatd+ left+ up+)
         VecBuilder.fill(n1StndardDevs, n2StandardDevs, n4StandardDevs),
-        VecBuilder.fill(n1StndardDevs * 0, n2StandardDevs * 0, n4StandardDevs * 0) // std devs
+        VecBuilder.fill(n1StndardDevs * 0.5, n2StandardDevs * 0.5, n4StandardDevs * 0.5) // std devs
         ),
   // CAM_3(
   //   PoseCameraConstants.CAM3N,
