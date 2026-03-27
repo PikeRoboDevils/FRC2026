@@ -84,7 +84,7 @@ public class RobotContainer {
                 new ModuleIOSpark(3));
 if(visionEnabled){
     vision = 
-      new Vision(drive::addVisionMeasurement);
+      new Vision(drive::addVisionMeasurement, ()->drive.getPose());
 }   
 
       // Select Subsystems

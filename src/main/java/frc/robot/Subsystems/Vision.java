@@ -27,6 +27,8 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
+
 import org.littletonrobotics.junction.Logger;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
@@ -57,7 +59,7 @@ public class Vision extends SubsystemBase{
   // private double longDistangePoseEstimationCount = 0;
 
   /** Current pose from the pose estimator using wheel odometry. */
-  // private Supplier<Pose2d> currentPose;
+  private Supplier<Pose2d> currentPose;
 
   private  VisionConsumer consumer;
 
@@ -73,9 +75,9 @@ public class Vision extends SubsystemBase{
    * @param currentPose Current pose supplier, should reference {@link SwerveDrive#getPose()}
    * @param field Current field, should be {@link SwerveDrive#field}
    */
-  public Vision(VisionConsumer consumer) {
+  public Vision(VisionConsumer consumer, Supplier<Pose2d> currentPose) {
     this.consumer = consumer;
-    // this.currentPose = currentPose;
+    this.currentPose = currentPose;
     field2d = new Field2d();
     lastPose = new Pose3d();
 
@@ -96,7 +98,7 @@ public class Vision extends SubsystemBase{
   public void periodic() {
       // Logger.recordOutput("Vision/Field2d", field2d);
       updatePoseEstimation();
-            Logger.recordOutput("VisionPose", ReturnPhotonPose());
+      
   }
 
   /**
@@ -499,4 +501,11 @@ public class Vision extends SubsystemBase{
         Matrix<N3, N1> visionMeasurementStdDevs);
   }
   
+  @FunctionalInterface
+  public static interface PoseConsumer {
+    public void accept(
+        Pose2d visionRobotPoseMeters,
+        double timestampSeconds,
+        Matrix<N3, N1> visionMeasurementStdDevs);
+  }
 }
