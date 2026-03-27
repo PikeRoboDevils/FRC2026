@@ -56,7 +56,7 @@ public class Vision extends SubsystemBase{
   public VisionSystemSim visionSim;
 
   /** Count of times that the odom thinks we're more than 10meters away from the april tag. */
-  // private double longDistangePoseEstimationCount = 0;
+  private double longDistangePoseEstimationCount = 0;
 
   /** Current pose from the pose estimator using wheel odometry. */
   private Supplier<Pose2d> currentPose;
@@ -250,19 +250,19 @@ public class Vision extends SubsystemBase{
 
 /*  Optimization we might wanna bring back*/
 
-      // // est pose is very far from recorded robot pose
-      // if (PhotonUtils.getDistanceToPose(currentPose.get(), pose.get().estimatedPose.toPose2d())
-      //     > 1) {
-      //   longDistangePoseEstimationCount++;
+      // est pose is very far from recorded robot pose
+      if (PhotonUtils.getDistanceToPose(currentPose.get(), pose.get().estimatedPose.toPose2d())
+          > 1) {
+        longDistangePoseEstimationCount++;
 
-      //   // if it calculates that were 10 meter away for more than 10 times in a row its
-      //   // probably right
-      //   if (longDistangePoseEstimationCount < 10) {
-      //     return Optional.empty();
-      //   }
-      // } else {
-      //   longDistangePoseEstimationCount = 0;
-      // }
+        // if it calculates that were 10 meter away for more than 10 times in a row its
+        // probably right
+        if (longDistangePoseEstimationCount < 10) {
+          return Optional.empty();
+        }
+      } else {
+        longDistangePoseEstimationCount = 0;
+      }
       return pose;
     }
     return Optional.empty();
@@ -290,17 +290,17 @@ public class Vision extends SubsystemBase{
     }
   }
 
-  // /**
-  //  * Get distance of the robot from the AprilTag pose.
-  //  *
-  //  * @param id AprilTag ID
-  //  * @return Distance
-  //  */
-  // public double getDistanceFromAprilTag(int id) {
-  //   Optional<Pose3d> tag = fieldLayout.getTagPose(id);
-  //   return tag.map(pose3d -> PhotonUtils.getDistanceToPose(currentPose.get(), pose3d.toPose2d()))
-  //       .orElse(-1.0);
-  // }
+  /**
+   * Get distance of the robot from the AprilTag pose.
+   *
+   * @param id AprilTag ID
+   * @return Distance
+   */
+  public double getDistanceFromAprilTag(int id) {
+    Optional<Pose3d> tag = fieldLayout.getTagPose(id);
+    return tag.map(pose3d -> PhotonUtils.getDistanceToPose(currentPose.get(), pose3d.toPose2d()))
+        .orElse(-1.0);
+  }
 
   /**
    * Get tracked target from a camera of AprilTagID
@@ -495,14 +495,6 @@ public class Vision extends SubsystemBase{
 // Abstraction!
 @FunctionalInterface
   public static interface VisionConsumer {
-    public void accept(
-        Pose2d visionRobotPoseMeters,
-        double timestampSeconds,
-        Matrix<N3, N1> visionMeasurementStdDevs);
-  }
-  
-  @FunctionalInterface
-  public static interface PoseConsumer {
     public void accept(
         Pose2d visionRobotPoseMeters,
         double timestampSeconds,
