@@ -224,7 +224,7 @@ if (shooterEnabled) {
     operater.povRight().onTrue(
       Commands.runOnce(()->shooter.currentShootvoltage -= 0.05));
         
-    operater.rightBumper().whileTrue(shooter.runTransferCommand(0.5));
+    operater.rightBumper().whileTrue(Commands.run(()->shooter.runTransfer(0.5), shooter));
 }
 
 // CLIMBER CONTROLS 
