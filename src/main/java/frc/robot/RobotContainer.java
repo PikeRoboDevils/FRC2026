@@ -134,7 +134,7 @@ if(visionEnabled){
     nearShoot = new Trigger(()->
       !driver.povDown().getAsBoolean() && // TRIGGER OVERIDE 
       //If pose is 1 meter away or on our side we will strt spining up
-      drive.getPose().getX() + 1 < LeftShootPose.getX()
+      drive.getPose().getX() + 1 < ShootPose.getX()
     );
 
     autoChooser = AutoBuilder.buildAutoChooser();
@@ -257,7 +257,7 @@ if (automation) {
   // Drive to Shooting positions
     driver.rightBumper().whileTrue(
       autoDrive.generateCommand(
-         RightShootPose));
+         ShootPose));
 
     // driver.leftBumper().whileTrue(
     //   autoDrive.generateCommand(LeftShootPose));
