@@ -295,6 +295,14 @@ if (automation) {
         ()->shooter.setVelocity(0.7),shooter).andThen(()->shooter.run());
   }
 
+  private Command LeftSide() {
+    return Commands.run(()->drive.setPose(new Pose2d( 3.482, 2.254,new Rotation2d(Units.degreesToRadians(45))) ),drive);
+  }
+
+  private Command RightSide() {
+        return Commands.run(()->drive.setPose(new Pose2d( 3.482, 5.525,new Rotation2d(Units.degreesToRadians(-45))) ),drive);
+
+  }
 
 
   private Command maybeAuto() {
@@ -308,6 +316,7 @@ if (automation) {
 
   public void teleopInit(){
     shooter.setVelocity(.2);
+    
   }
 
   }
