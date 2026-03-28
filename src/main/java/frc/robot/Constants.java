@@ -46,7 +46,7 @@ public final class Constants {
   public class systems{
     public static final boolean hopperEnabled = true;
     public static final boolean intakeEnabled = true;
-    public static final boolean indexerEnabled = true;
+    public static final boolean indexerEnabled = false;
     public static final boolean climberEnabled = false;
     public static final boolean shooterEnabled = true;
 

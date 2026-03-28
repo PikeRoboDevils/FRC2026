@@ -20,7 +20,7 @@ public class Shoot extends SubsystemBase {
         this.io = io;
     }
 
-    private void run(double speed) {
+    public void run(double speed) {
         io.run(speed);
     }
 
@@ -32,7 +32,7 @@ public class Shoot extends SubsystemBase {
         return Commands.run(() -> runTransfer(speed),this).finallyDo(()->stopTransfer());
     }
 
-    private void runTransfer(double speed) {
+    public void runTransfer(double speed) {
         if (inputs.velocity > minShootVelocity) {
             io.runIndex(speed);
         } else {
@@ -47,7 +47,7 @@ public class Shoot extends SubsystemBase {
 
     public Command runAt(double percent) {
         return Commands.run(
-                () -> run(percent)).alongWith(runTransferCommand(-0.5))
+                () -> run(percent)).alongWith(runTransferCommand(-1))
                 .finallyDo(() -> stop());
     }
 

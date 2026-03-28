@@ -214,8 +214,8 @@ if (shooterEnabled) {
     // driver.rightBumper().
 
 
-    driver.povDown().whileTrue(Commands.run(()->shooter.setVelocity(0.8)));
- driver.povDown().whileFalse(Commands.runOnce(()->shooter.setVelocity(0.2), shooter));
+    driver.rightBumper().whileTrue(Commands.run(()->shooter.setVelocity(0.8)));
+ driver.rightBumper().whileFalse(Commands.runOnce(()->shooter.setVelocity(0.2), shooter));
 
 
     // operater.povUp().whileTrue(Commands.runEnd(()->shooter.runTransfer(0.5),()->shooter.stopTransfer(), shooter));
@@ -286,19 +286,19 @@ if (automation) {
     .andThen(autoDrive.generateCommand(new Pose2d(0,-1,new Rotation2d(0))));
   }
 
-  // private Command shootAuto() {
-  //   return Commands.run(()->shooter.run(0.7),shooter).alongWith(
-  //     Commands.waitSeconds(3).andThen(()->shooter.runTransfer(-0.5))
-  //   );
-  // }
-
-    private Command shootAuto() {
-    return Commands.run(
-        ()->shooter.setVelocity(0.7),shooter)
-      .finallyDo(
-        ()->shooter.setVelocity(0.2)
+  private Command shootAuto() {
+    return Commands.run(()->shooter.run(0.7),shooter).alongWith(
+      Commands.waitSeconds(3).andThen(()->shooter.runTransfer(-0.5))
     );
   }
+
+    // private Command shootAuto() {
+    // return Commands.run(
+    //     ()->shooter.setVelocity(0.7),shooter)
+    //   .finallyDo(
+    //     ()->shooter.setVelocity(0.2)
+    // );
+  // }
 
 
 
