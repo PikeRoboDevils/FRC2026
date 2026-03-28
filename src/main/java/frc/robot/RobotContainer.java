@@ -65,7 +65,7 @@ public class RobotContainer {
   private hopper hopper;
   private Shoot shooter;
   private Climber climber;
-  private Vision vision;
+  // private Vision vision;
 
   private Aim autoAim;
   private DriveTo autoDrive;
@@ -83,8 +83,8 @@ public class RobotContainer {
                 new ModuleIOSpark(2),
                 new ModuleIOSpark(3));
 if(visionEnabled){
-    vision = 
-      new Vision(drive::addVisionMeasurement, ()->drive.getPose());
+    // vision = 
+    //   new Vision(drive::addVisionMeasurement, ()->drive.getPose());
 }   
 
       // Select Subsystems
@@ -145,7 +145,9 @@ if(visionEnabled){
     // Manual Autos/ NON-PATHPLANNER
     autoChooser.addOption("test", testAuto());
     autoChooser.addOption("JUST-SHOOT",shootAuto());
-    autoChooser.addOption("coin toss", maybeAuto());
+    autoChooser.addOption("Heads - Left", maybeAuto());
+    autoChooser.addOption("TAILS - Right", veryMaybeAuto());
+    autoChooser.addOption("middle", middleAuto());
 
     SmartDashboard.putData("Auto Chooser",autoChooser);
     configureBindings();
@@ -163,8 +165,8 @@ if(visionEnabled){
       drive.setDefaultCommand(
         DriveCommands.joystickDrive(
             drive,
-            () -> driver.getLeftY(),
-            () -> driver.getLeftX(),
+            () -> -driver.getLeftY(),
+            () -> -driver.getLeftX(),
             () -> driver.getRightX()));
 
             //RESET GYRO
@@ -175,8 +177,8 @@ if(visionEnabled){
               ()->
                 DriveCommands.joystickDrive(
                   drive,
-                    () -> 0.5*driver.getLeftY(),
-                    () -> 0.5*driver.getLeftX(),
+                    () -> -0.5*driver.getLeftY(),
+                    () -> -0.5*driver.getLeftX(),
                     () -> 0.5*driver.getRightX())
             ));
             
@@ -285,8 +287,15 @@ if (automation) {
   }
 
   private Command shootAuto() {
+    hopper.defer(()->Commands.repeatingSequence(
+      Commands.run(()->hopper.run(0.5),hopper),
+      Commands.run(()->hopper.run(-0.5),hopper)
+    ));
+
     return Commands.run(()->shooter.run(0.7),shooter).alongWith(
-      Commands.waitSeconds(3).andThen(()->shooter.runTransfer(-0.5))
+      Commands.waitSeconds(1)
+      .andThen(()->shooter.runTransfer(-0.5))
+      .andThen(hopper.idle())
     );
   }
 
@@ -306,19 +315,61 @@ if (automation) {
 
   // }
 
+
+  private Command middleAuto() {
+    return autoDrive.generateCommand(ShootPose)
+    .andThen(shootAuto());
+  }
+
 /**
- * Middle auto
+ * Left auto
  * @return 
  * A Command that will run during auto
  */
   private Command maybeAuto() {
-    drive.setPose(new Pose2d(0,0,new Rotation2d(Math.PI)));
-    //CHECK BEGINING ROTATION
-    return 
-      autoDrive.generateCommand(new Pose2d(-2,-0.5,new Rotation2d()))
-    .andThen(
-        shootAuto());
+
+    return shootAuto()
+      .andThen(autoDrive.generateCommand
+          (new Pose2d(
+            0.6,
+            5.9, 
+          new Rotation2d(Units.degreesToRadians(180))))
+          .beforeStarting(()->intake.run(1),intake)
+          .beforeStarting(()->hopper.run(0.5), hopper)
+          );
   }
+
+    private Command veryMaybeAuto() {
+
+    return shootAuto()
+      .andThen(autoDrive.generateCommand
+          (new Pose2d(
+            6.3,
+            2.3, 
+          new Rotation2d(Units.degreesToRadians(45))
+          )))
+          .andThen(autoDrive.generateCommand(
+            new Pose2d(
+              7.3,2.3,
+              new Rotation2d(
+                0
+              )
+            )
+          )      
+          .beforeStarting(()->intake.run(1),intake)
+          .beforeStarting(()->hopper.run(0.5), hopper)
+          )
+          .andThen(
+            autoDrive.generateCommand(
+              new Pose2d(
+                3.4,
+                2.3,
+                new Rotation2d(Units.degreesToRadians(45))
+              )
+            )
+          ).andThen(shootAuto());
+  }
+
 
   public void teleopInit(){
     shooter.setVelocity(.2);
