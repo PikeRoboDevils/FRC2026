@@ -155,11 +155,7 @@ if(visionEnabled){
 
     // Not working :)
     NamedCommands.registerCommand("RunIntake", intake.runAuto());
-
-   
-
-
-  }
+}
 
   private void configureBindings() {
 
@@ -309,6 +305,10 @@ if (automation) {
       autoDrive.generateCommand(new Pose2d(-2,-0.5,new Rotation2d())))
     .andThen(
         shootAuto());
+  }
+
+  public void teleopInit(){
+    drive.setPose(ClimbPose);
   }
 
 

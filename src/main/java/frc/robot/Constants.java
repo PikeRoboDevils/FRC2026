@@ -97,7 +97,7 @@ public final class Constants {
     // not set yet
     public static final Pose2d LeftShootPose = new Pose2d(3.15,5.3,new Rotation2d());
     public static final Pose2d RightShootPose = new Pose2d(3.1,2.1,new Rotation2d());
-    public static final Pose2d ClimbPose = new Pose2d(1,4,new Rotation2d());
+    public static final Pose2d ClimbPose = new Pose2d(1,4,new Rotation2d(Units.degreesToRadians(180)));
 
     public static final Pose2d HubPose = new Pose2d(4.3,4,new Rotation2d());
 

@@ -34,14 +34,21 @@ public class DriveConstants {
   public static final double trackWidth = Units.inchesToMeters(27);
   public static final double wheelBase = Units.inchesToMeters(27);
   public static final double driveBaseRadius = Math.hypot(trackWidth / 2.0, wheelBase / 2.0);
+//   public static final Translation2d[] moduleTranslations =
+//       new Translation2d[] {
+//         new Translation2d(trackWidth / 2.0, wheelBase / 2.0),
+//         new Translation2d(trackWidth / 2.0, -wheelBase / 2.0),
+//         new Translation2d(-trackWidth / 2.0, wheelBase / 2.0),
+//         new Translation2d(-trackWidth / 2.0, -wheelBase / 2.0)
+//       };
+
   public static final Translation2d[] moduleTranslations =
       new Translation2d[] {
-        new Translation2d(trackWidth / 2.0, wheelBase / 2.0),
-        new Translation2d(trackWidth / 2.0, -wheelBase / 2.0),
+        new Translation2d(-trackWidth / 2.0, -wheelBase / 2.0),
         new Translation2d(-trackWidth / 2.0, wheelBase / 2.0),
-        new Translation2d(-trackWidth / 2.0, -wheelBase / 2.0)
+        new Translation2d(trackWidth / 2.0, -wheelBase / 2.0),
+        new Translation2d(trackWidth / 2.0, wheelBase / 2.0)
       };
-
 /* Test Bot */
 //   public static final Rotation2d frontLeftZeroRotation = new Rotation2d(5.556);
 //   public static final Rotation2d frontRightZeroRotation = new Rotation2d(4.781);
@@ -111,7 +118,7 @@ public class DriveConstants {
       (2 * Math.PI) / 6.75 / 60.0; // Rotor RPM -> Wheel Rad/Sec
 
   // Drive PID configuration
-  public static final double driveKp = 0.0;
+  public static final double driveKp = 0.001;
   public static final double driveKd = 0.0;
   public static final double driveKs = 0.0;
   public static final double driveKv = 0.16;
