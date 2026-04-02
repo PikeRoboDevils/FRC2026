@@ -54,8 +54,8 @@ import org.littletonrobotics.junction.Logger;
 public class Drive extends SubsystemBase {
   static final Lock odometryLock = new ReentrantLock();
   private final GyroIO gyroIO;
-  private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
-  private final Module[] modules = new Module[4]; // FL, FR, BL, BR
+  private GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
+  private Module[] modules = new Module[4]; // FL, FR, BL, BR
   private final SysIdRoutine sysId;
   private final Alert gyroDisconnectedAlert =
       new Alert("Disconnected gyro, using kinematics as fallback.", AlertType.kError);
@@ -155,6 +155,7 @@ public class Drive extends SubsystemBase {
 
         //TODO: CHECK THIS LOOP AT HOME
     int sampleCount = sampleTimestamps.length;
+    // int sampleCount = 1;
     for (int i = 0; i < sampleCount; i++) {
       // Read wheel positions and deltas from each module
       SwerveModulePosition[] modulePositions = new SwerveModulePosition[4];
