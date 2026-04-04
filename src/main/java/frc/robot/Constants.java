@@ -95,8 +95,8 @@ public final class Constants {
 
   public class KeyPoses{
     // not set yet
-    public static final Pose2d LeftShootPose = new Pose2d(3.15,5.3,new Rotation2d());
-    public static final Pose2d RightShootPose = new Pose2d(3.1,2.1,new Rotation2d());
+    public static final Pose2d ShootPose = new Pose2d(1.5,3.6,new Rotation2d());
+
     public static final Pose2d ClimbPose = new Pose2d(1,4,new Rotation2d());
 
     public static final Pose2d HubPose = new Pose2d(4.3,4,new Rotation2d());
@@ -116,32 +116,32 @@ public final class Constants {
 }
 
 
-/* Vision 2025 */
+/* Vision 2026 */
   public static class CameraConstants {
     // Cam 1 is roughly on top of the lower mount for elevator lokking in towards the reef tags.
-    public static String CAM1N = "LEFT_CAM";
+    public static String CAM1N = "BackCAM";
 
     public static Rotation3d CAM1R =
-        new Rotation3d(0, Units.degreesToRadians(25), Units.degreesToRadians(40));
+        new Rotation3d(0,0, Units.degreesToRadians(180));
 
     // transform of camera (dont forget forward+ left+ up+)
     public static Translation3d CAM1T =
         new Translation3d(
-            Units.inchesToMeters(-4), 
-            Units.inchesToMeters(13),
-            Units.inchesToMeters(8));
+            Units.inchesToMeters(-11.75), 
+            Units.inchesToMeters(-8),
+            Units.inchesToMeters(5.625));
 
-    public static String CAM2N = "RIGHT_CAM";
+    public static String CAM2N = "FrontCAM";
 
     public static Rotation3d CAM2R =
-        new Rotation3d(0, Units.degreesToRadians(25), Units.degreesToRadians(180));
+        new Rotation3d(0, 0, 0);
 
     // transform of camera (dont forget forward+ left+ up+)
     public static Translation3d CAM2T =
         new Translation3d(
-            Units.inchesToMeters(-4), 
-            Units.inchesToMeters(-13),
-            Units.inchesToMeters(8));
+            Units.inchesToMeters(-4.25), 
+            Units.inchesToMeters(8.5),
+            Units.inchesToMeters(21.5));
 
       // This PID isnt tuned
       public static PPHolonomicDriveController mDriveController =
