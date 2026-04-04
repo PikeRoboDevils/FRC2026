@@ -12,7 +12,7 @@ public class Shoot extends SubsystemBase {
     private ShootIO io;
     private ShootIOInputsAutoLogged inputs = new ShootIOInputsAutoLogged();
 
-    public double currentShootvoltage = 0.2;
+    public double currentShootvoltage = 0.7;
 
     private double minShootVelocity = 3000;
 
@@ -20,7 +20,7 @@ public class Shoot extends SubsystemBase {
         this.io = io;
     }
 
-    private void run(double speed) {
+    public void run(double speed) {
         io.run(speed);
     }
 
@@ -32,7 +32,7 @@ public class Shoot extends SubsystemBase {
         return Commands.run(() -> runTransfer(speed),this).finallyDo(()->stopTransfer());
     }
 
-    private void runTransfer(double speed) {
+    public void runTransfer(double speed) {
         if (inputs.velocity > minShootVelocity) {
             io.runIndex(speed);
         } else {
@@ -57,7 +57,7 @@ public class Shoot extends SubsystemBase {
      */
     public void run() {
          run(currentShootvoltage);
-         runTransfer(-0.5);
+         runTransfer(-1);
     }
 
     public void setVelocity(double voltage){
