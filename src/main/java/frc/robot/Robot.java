@@ -32,7 +32,7 @@ import org.littletonrobotics.urcl.URCL;
  */
 public class Robot extends LoggedRobot {
   private Command autonomousCommand;
-  private RobotContainer robotContainer;
+  // private RobotContainer robotContainer;
 
   public Robot() {
     // Record metadata
@@ -85,7 +85,7 @@ public class Robot extends LoggedRobot {
 
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our autonomous chooser on the dashboard.
-    robotContainer = new RobotContainer();
+    // robotContainer = new RobotContainer();
   }
 
   /** This function is called periodically during all modes. */
@@ -117,7 +117,7 @@ public class Robot extends LoggedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    autonomousCommand = robotContainer.getAutonomousCommand();
+    // autonomousCommand = robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
     if (autonomousCommand != null) {
@@ -138,7 +138,7 @@ public class Robot extends LoggedRobot {
     // this line or comment it out.
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
-      robotContainer.teleopInit();
+      // robotContainer.teleopInit();
     }
   }
 
