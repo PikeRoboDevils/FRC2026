@@ -13,9 +13,15 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-// import org.ironmaple.simulation.SimulatedArena;
+import frc.robot.InputOutput.GyroSim;
+import frc.robot.InputOutput.ModuleSim;
+import frc.robot.Systems.*;
+
+import static edu.wpi.first.units.Units.*;
+
+
+import org.ironmaple.simulation.drivesims.SwerveModuleSimulation;
+import org.ironmaple.simulation.drivesims.configs.SwerveModuleSimulationConfig;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -24,6 +30,10 @@ import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 import org.littletonrobotics.urcl.URCL;
 
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.units.measure.*;
+
+
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
  * each mode, as described in the TimedRobot documentation. If you change the name of this class or
@@ -31,27 +41,17 @@ import org.littletonrobotics.urcl.URCL;
  * project.
  */
 public class Robot extends LoggedRobot {
-  private Command autonomousCommand;
-  // private RobotContainer robotContainer;
 
-  public Robot() {
+private Drive drive;
+
+  public void logSetup() {
+  
     // Record metadata
-    // Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
-    // Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
-    // Logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
-    // Logger.recordMetadata("GitDate", BuildConstants.GIT_DATE);
-    // Logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
-    // switch (BuildConstants.DIRTY) {
-    //   case 0:
-    //     Logger.recordMetadata("GitDirty", "All changes committed");
-    //     break;
-    //   case 1:
-    //     Logger.recordMetadata("GitDirty", "Uncomitted changes");
-    //     break;
-    //   default:
-    //     Logger.recordMetadata("GitDirty", "Unknown");
-    //     break;
-    // }
+    Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
+    Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
+    Logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
+    Logger.recordMetadata("GitDate", BuildConstants.GIT_DATE);
+    Logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
 
     // Set up data receivers & replay source
     switch (Constants.currentMode) {
@@ -62,10 +62,6 @@ public class Robot extends LoggedRobot {
         break;
 
       case SIM:
-        // Obtains the default instance of the simulation world, which is a Crescendo Arena.
-        // SimulatedArena.getInstance();
-        // Running a physics simulator, log to NT
-        Logger.addDataReceiver(new NT4Publisher());
         break;
 
       case REPLAY:
@@ -82,105 +78,47 @@ public class Robot extends LoggedRobot {
 
     // Start AdvantageKit logger
     Logger.start();
-
-    // Instantiate our RobotContainer. This will perform all our button bindings,
-    // and put our autonomous chooser on the dashboard.
-    // robotContainer = new RobotContainer();
-  }
-
-  /** This function is called periodically during all modes. */
-  @Override
-  public void robotPeriodic() {
-    // Optionally switch the thread to high priority to improve loop
-    // timing (see the template project documentation for details)
-    // Threads.setCurrentThreadPriority(true, 99);
-
-    // Runs the Scheduler. This is responsible for polling buttons, adding
-    // newly-scheduled commands, running already-scheduled commands, removing
-    // finished or interrupted commands, and running subsystem periodic() methods.
-    // This must be called from the robot's periodic block in order for anything in
-    // the Command-based framework to work.
-    CommandScheduler.getInstance().run();
-
-    // Return to non-RT thread priority (do not modify the first argument)
-    // Threads.setCurrentThreadPriority(false, 10);
-  }
-
-  /** This function is called once when the robot is disabled. */
-  @Override
-  public void disabledInit() {}
-
-  /** This function is called periodically when disabled. */
-  @Override
-  public void disabledPeriodic() {}
-
-  /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
-  @Override
-  public void autonomousInit() {
-    // autonomousCommand = robotContainer.getAutonomousCommand();
-
-    // schedule the autonomous command (example)
-    if (autonomousCommand != null) {
-      autonomousCommand.schedule();
-    }
-  }
-
-  /** This function is called periodically during autonomous. */
-  @Override
-  public void autonomousPeriodic() {}
-
-  /** This function is called once when teleop is enabled. */
-  @Override
-  public void teleopInit() {
-    // This makes sure that the autonomous stops running when
-    // teleop starts running. If you want the autonomous to
-    // continue until interrupted by another command, remove
-    // this line or comment it out.
-    if (autonomousCommand != null) {
-      autonomousCommand.cancel();
-      // robotContainer.teleopInit();
-    }
-  }
-
-  /** This function is called periodically during operator control. */
-  @Override
-  public void teleopPeriodic() {}
-
-  /** This function is called once when test mode is enabled. */
-  @Override
-  public void testInit() {
-    // Cancels all running commands at the start of test mode.
-    CommandScheduler.getInstance().cancelAll();
-  }
-
-  /** This function is called periodically during test mode. */
-  @Override
-  public void testPeriodic() {}
-
-  /** This function is called once when the robot is first started up. */
-  @Override
-  public void simulationInit() {
-    // Set the robot period to 1/100 second and configure 3 sub-ticks per period
-    // This simulates a 100Hz robot with 300Hz odometry.
-    // A Kit already handles it
-    // SimulatedArena.overrideSimulationTimings(Time.ofBaseUnits(defaultPeriodSecs,Seconds), 3);
-
-    // Reset field
-    // SimulatedArena.getInstance().resetFieldForAuto();
-
-    // // Clear all game pieces from the field
-    // SimulatedArena.getInstance().clearGamePieces();
-  }
-
-  /** This function is called periodically whilst in simulation. */
-  // simulation period method in your Robot.java
-  @Override
-  public void simulationPeriodic() {
-    // SimulatedArena.getInstance().simulationPeriodic();
-    // // Publish to telemetry using AdvantageKit
-    // Logger.recordOutput(
-    //     "FieldSimulation/Algae", SimulatedArena.getInstance().getGamePiecesArrayByType("Algae"));
-    // Logger.recordOutput(
-    //     "FieldSimulation/Coral", SimulatedArena.getInstance().getGamePiecesArrayByType("Coral"));
-  }
 }
+
+
+
+
+  public Robot() {
+    logSetup();
+
+  }
+
+@Override
+public void robotInit() {
+ var moduleSimulation = new SwerveModuleSimulation(
+  new SwerveModuleSimulationConfig(
+    DCMotor.getNEO(1),
+    DCMotor.getNEO(1),
+    defaultPeriodSecs,
+    defaultPeriodSecs,
+    Voltage.ofBaseUnits(0, Volts),
+    Voltage.ofBaseUnits(0, Volts),
+    Meters.ofBaseUnits(0.1),
+    MomentOfInertia.ofBaseUnits(0,KilogramSquareMeters),
+    defaultPeriodSecs));
+  
+  
+  drive= new Drive(
+  new GyroSim(),
+  new ModuleSim(moduleSimulation),
+  new ModuleSim(moduleSimulation), 
+  new ModuleSim(moduleSimulation),
+  new ModuleSim(moduleSimulation));
+  
+}
+  
+@Override
+public void robotPeriodic() {
+    drive.periodic();
+}
+
+}
+
+
+
+
