@@ -13,14 +13,16 @@
 
 package frc.robot;
 
+import frc.robot.InputOutput.Controls;
 import frc.robot.InputOutput.GyroSim;
 import frc.robot.InputOutput.ModuleSim;
 import frc.robot.Systems.*;
 
 import static edu.wpi.first.units.Units.*;
 
-
+import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.drivesims.SwerveModuleSimulation;
+import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
 import org.ironmaple.simulation.drivesims.configs.SwerveModuleSimulationConfig;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
@@ -30,6 +32,7 @@ import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 import org.littletonrobotics.urcl.URCL;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.*;
 
@@ -43,6 +46,7 @@ import edu.wpi.first.units.measure.*;
 public class Robot extends LoggedRobot {
 
 private Drive drive;
+private Controls controls;
 
   public void logSetup() {
   
@@ -86,35 +90,34 @@ private Drive drive;
   public Robot() {
     logSetup();
 
-  }
-
-@Override
-public void robotInit() {
- var moduleSimulation = new SwerveModuleSimulation(
-  new SwerveModuleSimulationConfig(
-    DCMotor.getNEO(1),
-    DCMotor.getNEO(1),
-    defaultPeriodSecs,
-    defaultPeriodSecs,
-    Voltage.ofBaseUnits(0, Volts),
-    Voltage.ofBaseUnits(0, Volts),
-    Meters.ofBaseUnits(0.1),
-    MomentOfInertia.ofBaseUnits(0,KilogramSquareMeters),
-    defaultPeriodSecs));
+     var swerveDriveSimulation = new SwerveDriveSimulation(
+  DriveTrainSimulationConfig.Default(), // Replace Soon
+  new Pose2d());
   
   
   drive= new Drive(
-  new GyroSim(),
-  new ModuleSim(moduleSimulation),
-  new ModuleSim(moduleSimulation), 
-  new ModuleSim(moduleSimulation),
-  new ModuleSim(moduleSimulation));
+    new GyroSim(),
+    new ModuleSim(swerveDriveSimulation.getModules()[0]),
+    new ModuleSim(swerveDriveSimulation.getModules()[1]),
+    new ModuleSim(swerveDriveSimulation.getModules()[2]),
+    new ModuleSim(swerveDriveSimulation.getModules()[3]));
   
-}
+    controls = new Controls(drive);
+  }
   
 @Override
 public void robotPeriodic() {
     drive.periodic();
+}
+
+@Override
+public void teleopInit() {
+  controls.start();
+}
+
+@Override
+public void teleopPeriodic() {
+  controls.periodic();
 }
 
 }
