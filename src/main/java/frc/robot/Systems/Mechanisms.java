@@ -1,13 +1,11 @@
 package frc.robot.Systems;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.littletonrobotics.junction.Logger;
 
-import static frc.robot.Constants.Mode;
-
+import frc.robot.Constants.Mode;
 import frc.robot.InputOutput.MechanismIO;
 import frc.robot.InputOutput.MechanismIOInputsAutoLogged;
 
@@ -18,6 +16,9 @@ public class Mechanisms {
     // To prevent Mistakes in spelling
     private String INTAKE = "INTAKE";
     private String SHOOTER = "SHOOTER";
+
+    // Holds all Mechanisms io and inputs
+    private Map<String , System> mechanismsMap = new HashMap<>();
 
     // Common class to group io and inputs 
     class System {
@@ -30,8 +31,7 @@ public class Mechanisms {
         }
     }
 
-    // Holds all Mechanisms io and inputs
-    Map<String , System> mechanismsMap = new HashMap<>();
+
     
 
     /* Constructer */
@@ -41,7 +41,7 @@ public class Mechanisms {
 
             case SIM:
                 mechanismsMap.put(INTAKE,new System(
-                    new IntakeSim() {},                    // Indepedent: Type Changes with mode
+                    new IntakeSim(),                    // Indepedent: Type Changes with mode
                     new MechanismIOInputsAutoLogged() ) ); // Dependent: Type Doesnt Change with Mode
             break; // End of Sim Case
 
@@ -62,12 +62,12 @@ public class Mechanisms {
 
     public void periodic() {
 
-        // For every Component in Mechanisms, UpdateInputs() until hasNext() is false
-        for (Iterator<String> i = mechanismsMap.keySet().iterator(); i.hasNext();) {
-            var currentSystem = mechanismsMap.get(i.toString());
+        // For every Component in Mechanisms, UpdateInputs()
+        for (String key : mechanismsMap.keySet()) {
+            var currentSystem = mechanismsMap.get(key);
 
             currentSystem.io.updateInputs(currentSystem.inputs);
-            Logger.processInputs(i.toString(),currentSystem.inputs);
+            Logger.processInputs(key,currentSystem.inputs);
         } // End of Loop
 
 

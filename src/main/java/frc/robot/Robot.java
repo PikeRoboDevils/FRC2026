@@ -41,7 +41,7 @@ public class Robot extends LoggedRobot {
 
 private Drive drive;
 private Controls controls;
-private Mechanisms subsystems;
+private Mechanisms mechanisms;
 
   public void logSetup() {
   
@@ -99,12 +99,13 @@ private Mechanisms subsystems;
   
     controls = new Controls(drive);
 
-    subsystems = new Mechanisms(Constants.currentMode);
+    mechanisms = new Mechanisms(Constants.currentMode);
   }
   
 @Override
 public void robotPeriodic() {
     drive.periodic();
+    mechanisms.periodic();
 }
 
 @Override
