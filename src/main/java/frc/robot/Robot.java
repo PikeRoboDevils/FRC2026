@@ -41,6 +41,7 @@ public class Robot extends LoggedRobot {
 
 private Drive drive;
 private Controls controls;
+private Mechanisms subsystems;
 
   public void logSetup() {
   
@@ -97,6 +98,8 @@ private Controls controls;
     new ModuleSim(swerveDriveSimulation.getModules()[3]));
   
     controls = new Controls(drive);
+
+    subsystems = new Mechanisms(Constants.currentMode);
   }
   
 @Override
