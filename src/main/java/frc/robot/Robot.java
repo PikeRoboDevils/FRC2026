@@ -43,7 +43,7 @@ private Drive drive;
 private Controls controls;
 private Mechanisms mechanisms;
 
-  public void logSetup() {
+  public Robot() {
   
     // Record metadata
     Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
@@ -61,6 +61,8 @@ private Mechanisms mechanisms;
         break;
 
       case SIM:
+        // Running a simulation, only need network tables
+        Logger.addDataReceiver(new NT4Publisher());
         break;
 
       case REPLAY:
@@ -77,13 +79,8 @@ private Mechanisms mechanisms;
 
     // Start AdvantageKit logger
     Logger.start();
-}
 
 
-
-
-  public Robot() {
-    logSetup();
 
      var swerveDriveSimulation = new SwerveDriveSimulation(
   DriveTrainSimulationConfig.Default(), // Replace Soon
@@ -106,6 +103,7 @@ private Mechanisms mechanisms;
 public void robotPeriodic() {
     drive.periodic();
     mechanisms.periodic();
+
 }
 
 @Override
