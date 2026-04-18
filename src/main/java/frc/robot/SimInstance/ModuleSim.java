@@ -13,11 +13,8 @@
 
 package frc.robot.SimInstance;
 
-import static edu.wpi.first.units.Units.Amps;
-import static edu.wpi.first.units.Units.Radian;
-import static edu.wpi.first.units.Units.RadiansPerSecond;
-import static edu.wpi.first.units.Units.Volts;
-import static frc.robot.DriveConstants.*;
+import org.ironmaple.simulation.drivesims.SwerveModuleSimulation;
+import org.ironmaple.simulation.motorsims.SimulatedMotorController;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -27,8 +24,8 @@ import edu.wpi.first.wpilibj.Timer;
 import frc.robot.DriveConstants;
 import frc.robot.InputOutput.ModuleIO;
 
-import org.ironmaple.simulation.drivesims.SwerveModuleSimulation;
-import org.ironmaple.simulation.motorsims.SimulatedMotorController;
+import static frc.robot.DriveConstants.*;
+import static edu.wpi.first.units.Units.*;
 
 /** Physics sim implementation of module IO. */
 public class ModuleSim implements ModuleIO {
