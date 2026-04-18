@@ -14,16 +14,12 @@
 package frc.robot;
 
 import frc.robot.InputOutput.Controls;
-import frc.robot.InputOutput.GyroSim;
-import frc.robot.InputOutput.ModuleSim;
+import frc.robot.SimInstance.ModuleSim;
+import frc.robot.SimInstance.GyroSim;
 import frc.robot.Systems.*;
 
-import static edu.wpi.first.units.Units.*;
-
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
-import org.ironmaple.simulation.drivesims.SwerveModuleSimulation;
 import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
-import org.ironmaple.simulation.drivesims.configs.SwerveModuleSimulationConfig;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -33,8 +29,6 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 import org.littletonrobotics.urcl.URCL;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.units.measure.*;
 
 
 /**

@@ -11,7 +11,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 
-package frc.robot.InputOutput;
+package frc.robot.SimInstance;
 
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Radian;
@@ -25,6 +25,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.DriveConstants;
+import frc.robot.InputOutput.ModuleIO;
 
 import org.ironmaple.simulation.drivesims.SwerveModuleSimulation;
 import org.ironmaple.simulation.motorsims.SimulatedMotorController;
