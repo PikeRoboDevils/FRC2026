@@ -16,11 +16,9 @@ package frc.robot;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Seconds;
 
-import com.ctre.phoenix6.configs.MountPoseConfigs;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.path.PathConstraints;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -42,18 +40,6 @@ public class DriveConstants {
         new Translation2d(-trackWidth / 2.0, -wheelBase / 2.0)
       };
 
-/* Test Bot */
-//   public static final Rotation2d frontLeftZeroRotation = new Rotation2d(5.556);
-//   public static final Rotation2d frontRightZeroRotation = new Rotation2d(4.781);
-//   public static final Rotation2d backLeftZeroRotation = new Rotation2d(6.256);
-//   public static final Rotation2d backRightZeroRotation = new Rotation2d(1.255);
-
-// /* 2025 Bot */
-//   public static final Rotation2d frontLeftZeroRotation = new Rotation2d(0.3052270);
-//   public static final Rotation2d frontRightZeroRotation = new Rotation2d(0.6216120);
-//   public static final Rotation2d backLeftZeroRotation = new Rotation2d(0.4421437);
-//   public static final Rotation2d backRightZeroRotation = new Rotation2d(0.2732941);
-
   /* 2026 Bot */
   public static final Rotation2d frontLeftZeroRotation = new Rotation2d(3.111);
   public static final Rotation2d frontRightZeroRotation = new Rotation2d(4.823);
@@ -62,28 +48,6 @@ public class DriveConstants {
 
   // Device CAN IDs
   public static final int pigeonCanId = 11;
-
-  /* Test Bot IDs */
-//   public static final int frontLeftDriveCanId = 9;
-//   public static final int backLeftDriveCanId = 6;
-//   public static final int frontRightDriveCanId = 3;
-//   public static final int backRightDriveCanId = 5;
-
-//   public static final int frontLeftTurnCanId = 8;
-//   public static final int backLeftTurnCanId = 7;
-//   public static final int frontRightTurnCanId = 2;
-//   public static final int backRightTurnCanId = 4;
-
-// /* 2025 Bot IDs */
-//   public static final int frontLeftDriveCanId = 5;
-//   public static final int backLeftDriveCanId = 7;
-//   public static final int frontRightDriveCanId = 4;
-//   public static final int backRightDriveCanId = 10;
-
-//   public static final int frontLeftTurnCanId = 6;
-//   public static final int backLeftTurnCanId = 8;
-//   public static final int frontRightTurnCanId = 3;
-//   public static final int backRightTurnCanId = 9;
 
       /* 2026 bot */
   public static final int frontLeftDriveCanId = 2; 
@@ -159,11 +123,6 @@ public class DriveConstants {
               1),
           moduleTranslations);
 
-
-          // GRYO ANGLE OFFSET
-// public static final Pose2d gyroOffset = new Pose2d(0,0, new Rotation2d(180));
-public static final MountPoseConfigs gyroOffset = new MountPoseConfigs().withMountPoseYaw(0); //isnt doing anythin???
-
   // Path On The Fly Constraints
   public static PathConstraints kTeleopPathConstraints =
       new PathConstraints(
@@ -188,25 +147,5 @@ public static final MountPoseConfigs gyroOffset = new MountPoseConfigs().withMou
 
   public static Rotation2d kRotationTolerance = Rotation2d.fromDegrees(1);
 
-//   public static DriveTrainSimulationConfig mapleSimConfig =
-//       DriveTrainSimulationConfig.Default()
-//           // Specify gyro type (for realistic gyro drifting and error simulation)
-//           .withGyro(COTS.ofPigeon2())
-//           // Specify swerve module (for realistic swerve dynamics)
-//           .withSwerveModule(
-//               new SwerveModuleSimulationConfig(
-//                   DCMotor.getNEO(1), // Drive motor is a NEO
-//                   DCMotor.getNEO(1), // Steer motor is a NEO
-//                   driveMotorReduction, // Drive motor gear ratio.
-//                   turnMotorReduction, // Steer motor gear ratio.
-//                   Voltage.ofBaseUnits(0.1, Volts), // Drive friction voltage.
-//                   Voltage.ofBaseUnits(0.1, Volts), // Steer friction voltage
-//                   Inches.of(2), // Wheel radius
-//                   KilogramSquareMeters.of(0.03), // Steer MOI
-//                   1.2)) // Wheel COF
-//           // Configures the track length and track width (spacing between swerve modules)
-//           .withTrackLengthTrackWidth(Inches.of(24), Inches.of(24))
-//           // Configures the bumper size (dimensions of the robot bumper)
-//           .withBumperSize(Inches.of(30), Inches.of(30));
-  public static Pose2d startingPose = new Pose2d(3, 3, new Rotation2d());
+  public static double DEADBAND = 0.1;
 }
