@@ -27,11 +27,16 @@ import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Time;
 
 public class DriveConstants {
-  public static final double maxSpeedMetersPerSec = Units.feetToMeters(15);
-  public static final double odometryFrequency = 100.0; // Hz
   public static final double trackWidth = Units.inchesToMeters(27);
   public static final double wheelBase = Units.inchesToMeters(27);
   public static final double driveBaseRadius = Math.hypot(trackWidth / 2.0, wheelBase / 2.0);
+
+  public static final double maxSpeedMetersPerSec = Units.feetToMeters(15);
+  public static final double getMaxAngularSpeedRadPerSec = maxSpeedMetersPerSec / driveBaseRadius;
+
+  public static final double odometryFrequency = 100.0; // Hz
+
+  // For Rotation Math ONLY
   public static final Translation2d[] moduleTranslations =
       new Translation2d[] {
         new Translation2d(trackWidth / 2.0, wheelBase / 2.0),

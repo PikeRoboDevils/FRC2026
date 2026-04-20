@@ -41,7 +41,6 @@ import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
 import frc.robot.InputOutput.GyroIO;
@@ -90,7 +89,7 @@ public class Drive {
     // Usage reporting for swerve template
     HAL.report(tResourceType.kResourceType_RobotDrive, tInstances.kRobotDriveSwerve_AdvantageKit);
 
-    // SparkOdometryThread.getInstance().start();
+    SparkOdometryThread.getInstance().start();
 
     // Configure AutoBuilder for PathPlanner
     AutoBuilder.configure(
@@ -115,8 +114,6 @@ public class Drive {
           Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose);
         });
 
-
-    // poseEstimator.resetPose(DriveConstants.startingPose);
   }
 
   public void periodic() {
@@ -128,25 +125,26 @@ public class Drive {
     }
     odometryLock.unlock();
 
-    // Stop moving when disabled
+    // Cant Drive if disabled
     if (DriverStation.isDisabled()) {
+
+      // Stops all modules
       for (var module : modules) {
         module.stop();
       }
-    }
 
-    // Log empty setpoint states when disabled
-    if (DriverStation.isDisabled()) {
+      // Log empty setpoint states when disabled
       Logger.recordOutput("SwerveStates/Setpoints", new SwerveModuleState[] {});
       Logger.recordOutput("SwerveStates/SetpointsOptimized", new SwerveModuleState[] {});
+
+      return; // Ends Drive Loop early 
     }
- 
-    SmartDashboard.getNumber("AnglePid", 5);
+
     // Update odometry
     double[] sampleTimestamps =
         modules[0].getOdometryTimestamps(); // All signals are sampled together
 
-        //TODO: CHECK THIS LOOP AT HOME
+    // TODO: This loop WILL be limited 
     int sampleCount = sampleTimestamps.length;
     for (int i = 0; i < sampleCount; i++) {
       // Read wheel positions and deltas from each module
@@ -205,9 +203,11 @@ public class Drive {
     // Log optimized setpoints (runSetpoint mutates each state)
     Logger.recordOutput("SwerveStates/SetpointsOptimized", setpointStates);
   }
+
 /**
    * Runs the drive at the desired velocity.
-   *
+   * Altered for PathPlanner
+   * 
    * @param speeds Speeds in meters/sec
    */
   public void runVelocityFeedForward(ChassisSpeeds speeds,DriveFeedforwards feeds) {
@@ -228,13 +228,13 @@ public class Drive {
     // Log optimized setpoints (runSetpoint mutates each state)
     Logger.recordOutput("SwerveStates/SetpointsOptimized", setpointStates);
   }
+
   /** Runs the drive in a straight line with the specified drive output. */
   public void runCharacterization(double output) {
     for (int i = 0; i < 4; i++) {
       modules[i].runCharacterization(output);
     }
   }
-
 
   /** Stops the drive. */
   public void stop() {
@@ -318,16 +318,6 @@ public class Drive {
     poseEstimator.resetRotation(new Rotation2d(Math.toRadians(angle)));
   }
 
-  /** Returns the maximum linear speed in meters per sec. */
-  public double getMaxLinearSpeedMetersPerSec() {
-    return maxSpeedMetersPerSec;
-  }
-
-  /** Returns the maximum angular speed in radians per sec. */
-  public double getMaxAngularSpeedRadPerSec() {
-    return maxSpeedMetersPerSec / driveBaseRadius;
-  }
-
 public double getSpeedMeters() {
   var c2 = Math.pow(getChassisSpeeds().vxMetersPerSecond,2) +Math.pow(getChassisSpeeds().vyMetersPerSecond,2);
   var speed = Math.sqrt(c2);
@@ -344,6 +334,11 @@ public double getSpeedMeters() {
         visionRobotPoseMeters, timestampSeconds, visionMeasurementStdDevs);
   }
 
+  /** Returns LinearVelocity from x,y Components
+   * 
+   * @param x is [-1,1]
+   * @param y is [-1,1]
+   */
   private static Translation2d getLinearVelocityFromJoysticks(double x, double y) {
     // Apply deadband
     double linearMagnitude = MathUtil.applyDeadband(Math.hypot(x, y), DEADBAND);
@@ -380,9 +375,9 @@ public double getSpeedMeters() {
           // Convert to field relative speeds & send command
           ChassisSpeeds speeds =
               new ChassisSpeeds(
-                  linearVelocity.getX() * getMaxLinearSpeedMetersPerSec(),
-                  linearVelocity.getY() * getMaxLinearSpeedMetersPerSec(),
-                  omega * getMaxAngularSpeedRadPerSec());
+                  linearVelocity.getX() * maxSpeedMetersPerSec,
+                  linearVelocity.getY() * maxSpeedMetersPerSec,
+                  omega * getMaxAngularSpeedRadPerSec);
 
           boolean isFlipped =
               DriverStation.getAlliance().isPresent()
