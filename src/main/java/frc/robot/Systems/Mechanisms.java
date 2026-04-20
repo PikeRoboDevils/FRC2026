@@ -10,6 +10,7 @@ import frc.robot.InputOutput.MechanismIO;
 import frc.robot.InputOutput.MechanismIOInputsAutoLogged;
 
 import frc.robot.SimInstance.IntakeSim;
+import frc.robot.SimInstance.ShooterSim;
 
 public class Mechanisms {
 
@@ -43,6 +44,10 @@ public class Mechanisms {
                 mechanismsMap.put(INTAKE,new System(
                     new IntakeSim(),                    // Indepedent: Type Changes with mode
                     new MechanismIOInputsAutoLogged() ) ); // Dependent: Type Doesnt Change with Mode
+
+                mechanismsMap.put(SHOOTER,new System(
+                    new ShooterSim(),
+                    new MechanismIOInputsAutoLogged()));
             break; // End of Sim Case
 
             default: // Replay Case
