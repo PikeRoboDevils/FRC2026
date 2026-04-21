@@ -88,7 +88,7 @@ private Mechanisms mechanisms;
   
   
   drive= new Drive(
-    new GyroSim(),
+    new GyroSim(swerveDriveSimulation.getGyroSimulation()),
     new ModuleSim(swerveDriveSimulation.getModules()[0]),
     new ModuleSim(swerveDriveSimulation.getModules()[1]),
     new ModuleSim(swerveDriveSimulation.getModules()[2]),

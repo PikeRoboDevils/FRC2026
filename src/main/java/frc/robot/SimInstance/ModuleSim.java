@@ -20,11 +20,15 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.measure.Voltage;
-import edu.wpi.first.wpilibj.Timer;
 import frc.robot.DriveConstants;
 import frc.robot.InputOutput.ModuleIO;
 
 import static frc.robot.DriveConstants.*;
+
+import java.util.Queue;
+
+import frc.robot.Systems.SparkOdometryThread;
+
 import static edu.wpi.first.units.Units.*;
 
 /** Physics sim implementation of module IO. */
@@ -43,6 +47,11 @@ public class ModuleSim implements ModuleIO {
   private double driveAppliedVolts = 0.0;
   private double turnAppliedVolts = 0.0;
 
+    // Queue inputs from odometry thread
+  private final Queue<Double> timestampQueue;
+  private final Queue<Double> drivePositionQueue;
+  private final Queue<Double> turnPositionQueue;
+
   public ModuleSim(SwerveModuleSimulation moduleSimulation) {
     this.moduleSimulation = moduleSimulation;
     // configures a generic motor controller for drive motor
@@ -58,6 +67,13 @@ public class ModuleSim implements ModuleIO {
 
     // Enable wrapping for turn PID
     turnController.enableContinuousInput(-Math.PI, Math.PI);
+
+    // Create odometry queues
+    timestampQueue = SparkOdometryThread.getInstance().makeTimestampQueue();
+    drivePositionQueue =
+        SparkOdometryThread.getInstance().registerSignal(()->moduleSimulation.getDriveWheelFinalPosition().in(Radians));
+    turnPositionQueue =
+        SparkOdometryThread.getInstance().registerSignal(()->moduleSimulation.getSteerAbsoluteAngle().in(Radians));
   }
 
   @Override
@@ -88,8 +104,6 @@ public class ModuleSim implements ModuleIO {
         Voltage.ofBaseUnits(MathUtil.clamp(driveAppliedVolts, -12.0, 12.0), Volts));
     this.turnMotor.requestVoltage(
         Voltage.ofBaseUnits(MathUtil.clamp(turnAppliedVolts, -12.0, 12.0), Volts));
-    // driveSim.update(0.02);
-    // turnSim.update(0.02);
 
     // Update drive inputs
     inputs.driveConnected = true;
@@ -106,10 +120,18 @@ public class ModuleSim implements ModuleIO {
     inputs.turnAppliedVolts = turnAppliedVolts;
     inputs.turnCurrentAmps = Math.abs(moduleSimulation.getSteerMotorSupplyCurrent().in(Amps));
 
-    // Update odometry inputs (50Hz because high-frequency odometry in sim doesn't matter)
-    inputs.odometryTimestamps = new double[] {Timer.getFPGATimestamp()};
-    inputs.odometryDrivePositionsRad = new double[] {inputs.drivePositionRad};
-    inputs.odometryTurnPositions = new Rotation2d[] {inputs.turnPosition};
+ // Update odometry inputs JUST LIKE in Real IO
+    inputs.odometryTimestamps =
+        timestampQueue.stream().mapToDouble((Double value) -> value).toArray();
+    inputs.odometryDrivePositionsRad =
+        drivePositionQueue.stream().mapToDouble((Double value) -> value).toArray();
+    inputs.odometryTurnPositions =
+        turnPositionQueue.stream()
+            .map((Double value) -> new Rotation2d(value))
+            .toArray(Rotation2d[]::new);
+    timestampQueue.clear();
+    drivePositionQueue.clear();
+    turnPositionQueue.clear();
   }
 
   @Override
