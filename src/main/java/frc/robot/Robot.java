@@ -17,9 +17,12 @@ import frc.robot.InputOutput.Controls;
 import frc.robot.SimInstance.ModuleSim;
 import frc.robot.SimInstance.GyroSim;
 import frc.robot.Systems.*;
+import frc.robot.Constants.*;
 
+import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
+import org.ironmaple.simulation.seasonspecific.rebuilt2026.Arena2026Rebuilt;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -44,7 +47,7 @@ private Controls controls;
 private Mechanisms mechanisms;
 
   public Robot() {
-  
+
     // Record metadata
     Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
     Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
@@ -97,6 +100,22 @@ private Mechanisms mechanisms;
     controls = new Controls(drive);
 
     mechanisms = new Mechanisms(Constants.currentMode);
+
+    /* Simulation */
+    if (Constants.currentMode == Mode.SIM) {
+  // Obtains the default instance 
+  SimulatedArena.getInstance();
+  // Overrides the default simulation
+  SimulatedArena.overrideInstance(new Arena2026Rebuilt(true)); 
+  // Add a field elements
+  SimulatedArena.getInstance().placeGamePiecesOnField();
+
+  SimulatedArena.getInstance().addDriveTrainSimulation(swerveDriveSimulation);
+
+  Logger.recordOutput("Field", SimulatedArena.getInstance().getGamePiecesArrayByType("Fuel"));
+    }
+
+
   }
   
 @Override
@@ -115,6 +134,14 @@ public void teleopInit() {
 public void teleopPeriodic() {
   controls.periodic();
 }
+
+
+// Only on Desktop Simulation
+@Override
+public void simulationPeriodic() {
+    SimulatedArena.getInstance().simulationPeriodic();
+}
+
 
 }
 
