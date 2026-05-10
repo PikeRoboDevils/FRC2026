@@ -6,9 +6,10 @@ import java.util.Map;
 import org.littletonrobotics.junction.Logger;
 
 import frc.robot.Constants.Mode;
+import frc.robot.Robot;
 import frc.robot.InputOutput.MechanismIO;
 import frc.robot.InputOutput.MechanismIOInputsAutoLogged;
-
+import frc.robot.SimInstance.HopperSim;
 import frc.robot.SimInstance.IntakeSim;
 import frc.robot.SimInstance.ShooterSim;
 
@@ -17,6 +18,7 @@ public class Mechanisms {
     // To prevent Mistakes in spelling
     private String INTAKE = "INTAKE";
     private String SHOOTER = "SHOOTER";
+    private String HOPPER = "HOPPER";
 
     // Holds all Mechanisms io and inputs
     private Map<String , System> mechanismsMap = new HashMap<>();
@@ -42,11 +44,15 @@ public class Mechanisms {
 
             case SIM:
                 mechanismsMap.put(INTAKE,new System(
-                    new IntakeSim(),                    // Indepedent: Type Changes with mode
+                    new IntakeSim(Robot.driveSim),                    // Indepedent: Type Changes with mode
                     new MechanismIOInputsAutoLogged() ) ); // Dependent: Type Doesnt Change with Mode
 
                 mechanismsMap.put(SHOOTER,new System(
                     new ShooterSim(),
+                    new MechanismIOInputsAutoLogged()));
+
+                mechanismsMap.put(HOPPER,new System(
+                    new HopperSim(),
                     new MechanismIOInputsAutoLogged()));
             break; // End of Sim Case
 
@@ -56,6 +62,10 @@ public class Mechanisms {
                     new MechanismIOInputsAutoLogged() ) );
 
                 mechanismsMap.put(SHOOTER,new System(
+                    new MechanismIO() {},
+                    new MechanismIOInputsAutoLogged() ) );
+
+                mechanismsMap.put(HOPPER,new System(
                     new MechanismIO() {},
                     new MechanismIOInputsAutoLogged() ) );
             break; // End of Default Case
@@ -74,6 +84,7 @@ public class Mechanisms {
             currentSystem.io.updateInputs(currentSystem.inputs);
             Logger.processInputs(key,currentSystem.inputs);
         } // End of Loop
+
 
 
     }
