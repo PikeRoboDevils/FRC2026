@@ -42,6 +42,7 @@ import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.Constants.Mode;
 import frc.robot.InputOutput.GyroIO;
 import frc.robot.InputOutput.GyroIOInputsAutoLogged;
@@ -88,8 +89,11 @@ public class Drive {
 
     // Usage reporting for swerve template
     HAL.report(tResourceType.kResourceType_RobotDrive, tInstances.kRobotDriveSwerve_AdvantageKit);
-
-    SparkOdometryThread.getInstance().start();
+       
+    if (Robot.isReal()) {
+          SparkOdometryThread.getInstance().start();
+        }
+    
 
     // Configure AutoBuilder for PathPlanner
     AutoBuilder.configure(
@@ -362,9 +366,9 @@ public double getSpeedMeters() {
       Double stickAngle) {
     
 
-          // Get linear velocity
-          Translation2d linearVelocity =
-              getLinearVelocityFromJoysticks(stickX, stickY);
+          // // Get linear velocity
+          // Translation2d linearVelocity =
+          //     getLinearVelocityFromJoysticks(stickX, stickY);
 
           // Apply rotation deadband
           double omega = MathUtil.applyDeadband(stickAngle, DEADBAND);
@@ -375,9 +379,9 @@ public double getSpeedMeters() {
           // Convert to field relative speeds & send command
           ChassisSpeeds speeds =
               new ChassisSpeeds(
-                  linearVelocity.getX() * maxSpeedMetersPerSec,
-                  linearVelocity.getY() * maxSpeedMetersPerSec,
-                  omega * getMaxAngularSpeedRadPerSec);
+                  stickX * maxSpeedMetersPerSec,
+                  stickY * maxSpeedMetersPerSec,
+                  omega * maxAngularSpeedRadPerSec);
 
           boolean isFlipped =
               DriverStation.getAlliance().isPresent()
@@ -386,8 +390,8 @@ public double getSpeedMeters() {
           runVelocity(
               ChassisSpeeds.fromFieldRelativeSpeeds(
                   speeds,
-                  isFlipped
-                      ? getRotation().plus(new Rotation2d(Math.PI))
+                  isFlipped?
+                      getRotation().plus(new Rotation2d(Math.PI))
                       : getRotation()));
   }
 

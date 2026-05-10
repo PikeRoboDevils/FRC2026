@@ -16,10 +16,10 @@ public class Controls {
     public void start(){}
 
     public void periodic(){
-
+        drive.joystickDrive(driver.getLeftX(),driver.getLeftY(), driver.getRightX());
         if (driver.getBButtonPressed()){ drive.resetGyro(0);}
 
-        drive.joystickDrive(driver.getLeftX(), driver.getLeftY(), driver.getRightX());
+        
 
     }
     

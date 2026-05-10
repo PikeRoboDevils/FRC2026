@@ -13,6 +13,9 @@ public interface MechanismIO {
 
     public double appliedOutput;
 
+    /* This is only here for MapleSim */
+    public boolean simulationBoolean; // Extra PUBLIC Variable, Not always used 
+
   }
 
   public default void updateInputs(MechanismIOInputs inputs) {}

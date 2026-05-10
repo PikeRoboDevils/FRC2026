@@ -32,6 +32,7 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 import org.littletonrobotics.urcl.URCL;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 
 
 /**
@@ -45,6 +46,8 @@ public class Robot extends LoggedRobot {
 private Drive drive;
 private Controls controls;
 private Mechanisms mechanisms;
+
+public static SwerveDriveSimulation driveSim;
 
   public Robot() {
 
@@ -85,17 +88,16 @@ private Mechanisms mechanisms;
 
 
 
-     var swerveDriveSimulation = new SwerveDriveSimulation(
+     driveSim = new SwerveDriveSimulation(
   DriveTrainSimulationConfig.Default(), // Replace Soon
-  new Pose2d());
-  
-  
+  new Pose2d(5,5,new Rotation2d()));
+  var modules =driveSim.getModules();
   drive= new Drive(
-    new GyroSim(swerveDriveSimulation.getGyroSimulation()),
-    new ModuleSim(swerveDriveSimulation.getModules()[0]),
-    new ModuleSim(swerveDriveSimulation.getModules()[1]),
-    new ModuleSim(swerveDriveSimulation.getModules()[2]),
-    new ModuleSim(swerveDriveSimulation.getModules()[3]));
+    new GyroSim(driveSim.getGyroSimulation()),
+    new ModuleSim(modules[0]),
+    new ModuleSim(modules[1]),
+    new ModuleSim(modules[2]),
+    new ModuleSim(modules[3]));
   
     controls = new Controls(drive);
 
@@ -106,13 +108,13 @@ private Mechanisms mechanisms;
   // Obtains the default instance 
   SimulatedArena.getInstance();
   // Overrides the default simulation
-  SimulatedArena.overrideInstance(new Arena2026Rebuilt(true)); 
+  SimulatedArena.overrideInstance(new Arena2026Rebuilt(false)); 
   // Add a field elements
   SimulatedArena.getInstance().placeGamePiecesOnField();
 
-  SimulatedArena.getInstance().addDriveTrainSimulation(swerveDriveSimulation);
+  SimulatedArena.getInstance().addDriveTrainSimulation(driveSim);
 
-  Logger.recordOutput("Field", SimulatedArena.getInstance().getGamePiecesArrayByType("Fuel"));
+  
     }
 
 
@@ -140,6 +142,8 @@ public void teleopPeriodic() {
 @Override
 public void simulationPeriodic() {
     SimulatedArena.getInstance().simulationPeriodic();
+    Logger.recordOutput("Simulation/Field", SimulatedArena.getInstance().getGamePiecesArrayByType("Fuel"));
+    Logger.recordOutput("Simulation/SimPose", driveSim.getSimulatedDriveTrainPose());
 }
 
 
